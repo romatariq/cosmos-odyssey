@@ -11,7 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString)
+        .EnableSensitiveDataLogging());
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -25,6 +26,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(
 builder.Services.AddAuthentication();
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddHostedService<ApiBackgroundService>();
 
 var app = builder.Build();
 
