@@ -1,4 +1,5 @@
 using DAL;
+using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp;
@@ -15,9 +16,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-        options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<AppUser, AppRole>(
+        options => options.SignIn.RequireConfirmedAccount = false)
+    .AddDefaultTokenProviders()
+    .AddDefaultUI()
     .AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services.AddAuthentication();
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
