@@ -1,4 +1,5 @@
-﻿using Domain.Identity;
+﻿using Domain;
+using Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,13 @@ public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid>
     
     public DbSet<AppUser> AppUsers { get; set; } = default!;
     public DbSet<AppRole> AppRoles { get; set; } = default!;
+    
+    public DbSet<Company> Companies { get; set; } = default!;
+    public DbSet<Leg> Legs { get; set; } = default!;
+    public DbSet<Location> Locations { get; set; } = default!;
+    public DbSet<Provider> Providers { get; set; } = default!;
+    public DbSet<RouteInfo> RouteInfos { get; set; } = default!;
+    public DbSet<TravelPrice> TravelPrices { get; set; } = default!;
     
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
