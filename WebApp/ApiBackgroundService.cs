@@ -53,9 +53,9 @@ public class ApiBackgroundService: BackgroundService
             .OrderByDescending(x => x.ValidUntil)
             .FirstOrDefaultAsync();
         
-        if (latestTravelPrice?.ValidUntil > DateTime.Now)
+        if (latestTravelPrice?.ValidUntil > DateTime.UtcNow)
         {
-            return latestTravelPrice.ValidUntil.Subtract(DateTime.Now).TotalSeconds;
+            return latestTravelPrice.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds;
         }
         
         using var client = new HttpClient();
