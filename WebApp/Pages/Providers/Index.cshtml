@@ -28,11 +28,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.Trips[0].TotalPrice)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trips[0].Companies)
+            </th>
+            <th>
+                Route
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Trips) {
+    var companies = string.Join(", ", item.Companies);
+    var travelTime = $"{Math.Round(item.TotalTravelTime.TotalDays)}d {item.TotalTravelTime.Hours}h {item.TotalTravelTime.Minutes}m";
+    var route = item.Flights.Count > 1 ? $"{item.Flights.Count - 1} stops" : "Direct";
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.From)
@@ -41,16 +49,19 @@
                 @Html.DisplayFor(modelItem => item.To)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalTravelTime)
+                @Html.DisplayFor(modelItem => travelTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalDistance)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
+                @Html.DisplayFor(modelItem => companies)
             </td>
             <td>
-                @* <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> *@
+                @route
             </td>
         </tr>
 }
