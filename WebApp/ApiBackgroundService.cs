@@ -66,8 +66,10 @@ public class ApiBackgroundService: BackgroundService
 
         if (travelPrice == null || travelPrice.Id == latestTravelPrice?.Id)
         {
-            _logger.LogError("Failed to fetch travel price or miscalculated valid until.");
-            return 30;
+            var message = latestTravelPrice?.Id != null ? 
+                "Price is already in the database. Miscalculated time." : "Failed to fetch from api.";
+            _logger.LogError("Fetched travel price is invalid. {message}", message);
+            return 10;
         }
 
         try
@@ -85,7 +87,7 @@ public class ApiBackgroundService: BackgroundService
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to save travel price to db.");
-            return 30;
+            return 10;
         }
         
         return travelPrice.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds;
