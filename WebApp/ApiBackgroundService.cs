@@ -78,10 +78,7 @@ public class ApiBackgroundService: BackgroundService
             ParseTravelPriceToMatchDomain(travelPrice);
             await context.TravelPrices.AddAsync(travelPrice);
             
-            await context.TravelPrices
-                .OrderByDescending(tp => tp.ValidUntil)
-                .Skip(15)
-                .ExecuteDeleteAsync();
+            await DeleteOldTravelPrices(context);
             
             await context.SaveChangesAsync();
         }
@@ -95,7 +92,7 @@ public class ApiBackgroundService: BackgroundService
     }
     
     
-    private List<Company> GetUniqueCompanies(TravelPrice travelPrice)
+    private static List<Company> GetUniqueCompanies(TravelPrice travelPrice)
     {
         return travelPrice.Legs!
             .SelectMany(l => l.Providers!)
@@ -104,8 +101,17 @@ public class ApiBackgroundService: BackgroundService
             .Select(c => c.First())
             .ToList();
     }
+    
+    private static Task<int> DeleteOldTravelPrices(AppDbContext context)
+    {
+        return context.TravelPrices
+            .OrderByDescending(tp => tp.ValidUntil)
+            .Skip(15)
+            .ExecuteDeleteAsync();
+    }
+    
 
-    private void ParseTravelPriceToMatchDomain(TravelPrice travelPrice)
+    private static void ParseTravelPriceToMatchDomain(TravelPrice travelPrice)
     {
         foreach (var leg in travelPrice.Legs?? [])
         {
