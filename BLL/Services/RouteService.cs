@@ -17,6 +17,8 @@ public class RouteService
     
     public async Task<List<Trip>> GetAllTrips(EPlanet from, EPlanet to)
     {
+        if (from == to) return [];
+        
         var fromStr = Planets.AllPlanets[(int) from];
         var toStr = Planets.AllPlanets[(int) to];
         
@@ -25,11 +27,10 @@ public class RouteService
         
         return validRoutes.Select(route => new Trip()
         {
-            From = fromStr,
-            To = toStr,
-            TotalPrice = route.Sum(f => f.Price),
-            TotalDistance = route.Sum(f => f.Distance),
-            TotalTravelTime = route.Last().Arrival - route.First().Departure,
+            From = route.First().Departure,
+            To = route.Last().Arrival,
+            Price = route.Sum(f => f.Price),
+            Distance = route.Sum(f => f.Distance),
             Flights = route,
             Companies = route.Select(f => f.Company).Distinct().ToList()
         }).ToList();
