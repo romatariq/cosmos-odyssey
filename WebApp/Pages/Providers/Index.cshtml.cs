@@ -49,7 +49,7 @@ namespace WebApp.Pages_Providers
                 From = from.Value;
                 To = to.Value;
             }
-            Trips = await _service.GetAllTrips(From, To);
+            Trips = await _service.GetAllTrips(From, To, filter?.Trim());
         }
     }
 }
