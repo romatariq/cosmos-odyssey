@@ -7,9 +7,19 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<form method="get">
+    <div>
+        <label asp-for="SelectedFrom" class="control-label"></label>
+        <select asp-for="SelectedFrom" class ="form-control" asp-items="Model.FromSelectList"></select>
+    
+        <label asp-for="SelectedTo" class="control-label"></label>
+        <select asp-for="SelectedTo" class ="form-control" asp-items="Model.ToSelectList"></select>
+    </div>
+    
+    
+    <input type="submit" value="Filter"/>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -20,26 +30,27 @@
                 @Html.DisplayNameFor(model => model.Trips[0].To)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trips[0].TotalTravelTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Trips[0].TotalDistance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Trips[0].TotalPrice)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Trips[0].Companies)
             </th>
             <th>
                 Route
+            </th>
+            <th>
+                Travel time
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trips[0].Distance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trips[0].Price)
             </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Trips) {
     var companies = string.Join(", ", item.Companies);
-    var travelTime = $"{Math.Round(item.TotalTravelTime.TotalDays)}d {item.TotalTravelTime.Hours}h {item.TotalTravelTime.Minutes}m";
+    var travelTime = item.To - item.From;
+    var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
     var route = item.Flights.Count > 1 ? $"{item.Flights.Count - 1} stops" : "Direct";
         <tr>
             <td>
@@ -49,19 +60,19 @@
                 @Html.DisplayFor(modelItem => item.To)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => travelTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalDistance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => companies)
             </td>
             <td>
                 @route
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => travelTimeStr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Distance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
             </td>
         </tr>
 }

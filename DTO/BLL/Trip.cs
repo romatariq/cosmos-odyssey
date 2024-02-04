@@ -2,15 +2,13 @@ namespace DTO.BLL;
 
 public class Trip
 {
-    public string From { get; set; } = default!;
+    public DateTime From { get; set; }
 
-    public string To { get; set; } = default!;
+    public DateTime To { get; set; }
 
-    public decimal TotalPrice { get; set; }
+    public decimal Price { get; set; }
 
-    public long TotalDistance { get; set; }
-
-    public TimeSpan TotalTravelTime { get; set; }
+    public long Distance { get; set; }
 
     public List<string> Companies { get; set; } = default!;
 
