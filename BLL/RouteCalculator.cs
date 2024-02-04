@@ -27,9 +27,9 @@ public static class RouteCalculator
         {
             allTrips.Add([..currentTrip]);
         }
-        else
+        else if (graph.TryGetValue(from, out var flights))
         {
-            foreach (var flight in graph[from])
+            foreach (var flight in flights)
             {
                 if (visited.Contains(flight.To) || 
                     (currentTrip.Count > 0 && 
