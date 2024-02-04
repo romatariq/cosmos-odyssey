@@ -39,8 +39,10 @@ namespace WebApp.Pages_Providers
         
         [BindProperty]
         public EPlanet To { get; set; } = EPlanet.Mars;
+        
+        public string? Filter { get; set; }
 
-        public async Task OnGetAsync(EPlanet? from, EPlanet? to)
+        public async Task OnGetAsync(EPlanet? from, EPlanet? to, string? filter)
         {
             if (from != null && to != null)
             {

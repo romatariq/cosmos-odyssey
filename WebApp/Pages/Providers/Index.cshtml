@@ -19,6 +19,11 @@
             <select asp-for="To" class="form-control" asp-items="Model.ToSelectList"></select>
         </div>
         
+        <div class="col-2">
+            <label asp-for="Filter" class="control-label"></label>
+            <input asp-for="Filter" class="form-control" placeholder="Company name"/>
+        </div>
+        
     </div>
     <input type="submit" class="btn btn-primary" value="Filter"/>
 </form>
