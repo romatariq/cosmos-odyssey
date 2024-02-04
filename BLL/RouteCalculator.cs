@@ -25,13 +25,19 @@ public static class RouteCalculator
         
         if (from == to)
         {
-            allTrips.Add( new List<Flight>(currentTrip));
+            allTrips.Add([..currentTrip]);
         }
         else
         {
             foreach (var flight in graph[from])
             {
-                if (visited.Contains(flight.To) || (currentTrip.Count > 0 && flight.Departure < currentTrip.Last().Arrival)) continue;
+                if (visited.Contains(flight.To) || 
+                    (currentTrip.Count > 0 && 
+                     flight.Departure.AddMinutes(30) < currentTrip.Last().Arrival &&
+                     flight.Departure < currentTrip.Last().Arrival.AddHours(24)))
+                {
+                    continue;
+                }
                 
                 currentTrip.Add(flight);
                 GetAllPossibleTrips(flight.To, to, graph, allTrips, visited, currentTrip);
