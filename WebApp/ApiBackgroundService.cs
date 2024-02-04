@@ -1,6 +1,7 @@
 using System.Text.Json;
 using DAL;
 using Domain;
+using Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApp;
@@ -55,7 +56,7 @@ public class ApiBackgroundService: BackgroundService
         
         if (latestTravelPrice?.ValidUntil > DateTime.UtcNow)
         {
-            return latestTravelPrice.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds;
+            return latestTravelPrice.ValidUntil.GetTimeDifferenceFromNowInSecondsWithSpare();
         }
         
         using var client = new HttpClient();
@@ -90,7 +91,7 @@ public class ApiBackgroundService: BackgroundService
             return 10;
         }
         
-        return travelPrice.ValidUntil.Subtract(DateTime.UtcNow).TotalSeconds;
+        return travelPrice.ValidUntil.GetTimeDifferenceFromNowInSecondsWithSpare();
     }
     
     
