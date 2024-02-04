@@ -1,31 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using BLL.Services;
 using DAL;
 using Domain;
+using Domain.Constants;
+using DTO.BLL;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Pages_Providers
 {
     public class IndexModel : PageModel
     {
-        private readonly DAL.AppDbContext _context;
+        private readonly RouteService _service;
 
-        public IndexModel(DAL.AppDbContext context)
+        public IndexModel(AppDbContext context)
         {
-            _context = context;
+            _service = new RouteService(context);
         }
 
-        public IList<Provider> Provider { get;set; } = default!;
+        public IList<Trip> Trips { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Provider = await _context.Providers
-                .Include(p => p.Company)
-                .Include(p => p.Leg).ToListAsync();
+            Trips = await _service.GetAllTrips(Planets.Venus, Planets.Mars);
         }
     }
 }

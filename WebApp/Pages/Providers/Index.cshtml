@@ -14,45 +14,43 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Provider[0].Price)
+                @Html.DisplayNameFor(model => model.Trips[0].From)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Provider[0].FlightStart)
+                @Html.DisplayNameFor(model => model.Trips[0].To)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Provider[0].FlightEnd)
+                @Html.DisplayNameFor(model => model.Trips[0].TotalTravelTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Provider[0].Company)
+                @Html.DisplayNameFor(model => model.Trips[0].TotalDistance)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Provider[0].Leg)
+                @Html.DisplayNameFor(model => model.Trips[0].TotalPrice)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Provider) {
+@foreach (var item in Model.Trips) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.From)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FlightStart)
+                @Html.DisplayFor(modelItem => item.To)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FlightEnd)
+                @Html.DisplayFor(modelItem => item.TotalTravelTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Company!.Name)
+                @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Leg!.Id)
+                @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                @* <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> *@
             </td>
         </tr>
 }
