@@ -13,8 +13,24 @@ public class RouteService
         _context = context;
     }
 
+    
+    public async Task<List<Trip>> GetAllTrips(string from, string to)
+    {
+        var routes = await GetAllRoutes();
+        var validRoutes = RouteCalculator.GetAllPossibleTrips(from, to, routes.ToList());
+        
+        return validRoutes.Select(route => new Trip()
+        {
+            From = from,
+            To = to,
+            TotalPrice = route.Sum(f => f.Price),
+            TotalDistance = route.Sum(f => f.Distance),
+            TotalTravelTime = route.Last().Arrival - route.First().Departure,
+            Flights = route
+        }).ToList();
+    }
 
-    public async Task<IEnumerable<Route>> GetAllRoutes()
+    private async Task<IEnumerable<Route>> GetAllRoutes()
     {
         var routes = await _context.TravelPrices
             .Include(tp => tp.Legs!)
