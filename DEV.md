@@ -1,6 +1,6 @@
 # create migration
 ~~~bash
-dotnet ef migrations add Domain --project DAL --startup-project WebApp --context AppDbContext
+dotnet ef migrations add Initial --project DAL --startup-project WebApp --context AppDbContext
 ~~~
 
 # Scaffold razor pages

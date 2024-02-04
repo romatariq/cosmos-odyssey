@@ -14,4 +14,8 @@ public class Location
     
     [InverseProperty(nameof(RouteInfo.To))]
     public ICollection<RouteInfo>? ToRoutes { get; set; }
+    
+    
+    public Guid TravelPriceId { get; set; }
+    public TravelPrice? TravelPrice { get; set; }
 }

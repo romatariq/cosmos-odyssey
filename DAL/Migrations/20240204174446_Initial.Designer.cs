@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240203141303_Initial")]
+    [Migration("20240204174446_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,26 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TravelPriceId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelPriceId");
+
+                    b.ToTable("Companies");
+                });
 
             modelBuilder.Entity("Domain.Identity.AppRole", b =>
                 {
@@ -115,6 +135,115 @@ namespace DAL.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Leg", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RouteInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TravelPriceId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteInfoId");
+
+                    b.HasIndex("TravelPriceId");
+
+                    b.ToTable("Legs");
+                });
+
+            modelBuilder.Entity("Domain.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TravelPriceId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelPriceId");
+
+                    b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("Domain.Provider", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("FlightEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("FlightStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("LegId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("LegId");
+
+                    b.ToTable("Providers");
+                });
+
+            modelBuilder.Entity("Domain.RouteInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("Distance")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("FromId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ToId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromId");
+
+                    b.HasIndex("ToId");
+
+                    b.ToTable("RouteInfos");
+                });
+
+            modelBuilder.Entity("Domain.TravelPrice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TravelPrices");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -220,6 +349,85 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Company", b =>
+                {
+                    b.HasOne("Domain.TravelPrice", "TravelPrice")
+                        .WithMany("Companies")
+                        .HasForeignKey("TravelPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TravelPrice");
+                });
+
+            modelBuilder.Entity("Domain.Leg", b =>
+                {
+                    b.HasOne("Domain.RouteInfo", "RouteInfo")
+                        .WithMany("Legs")
+                        .HasForeignKey("RouteInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.TravelPrice", "TravelPrice")
+                        .WithMany("Legs")
+                        .HasForeignKey("TravelPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RouteInfo");
+
+                    b.Navigation("TravelPrice");
+                });
+
+            modelBuilder.Entity("Domain.Location", b =>
+                {
+                    b.HasOne("Domain.TravelPrice", "TravelPrice")
+                        .WithMany("Locations")
+                        .HasForeignKey("TravelPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TravelPrice");
+                });
+
+            modelBuilder.Entity("Domain.Provider", b =>
+                {
+                    b.HasOne("Domain.Company", "Company")
+                        .WithMany("Providers")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Leg", "Leg")
+                        .WithMany("Providers")
+                        .HasForeignKey("LegId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Leg");
+                });
+
+            modelBuilder.Entity("Domain.RouteInfo", b =>
+                {
+                    b.HasOne("Domain.Location", "From")
+                        .WithMany("FromRoutes")
+                        .HasForeignKey("FromId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Location", "To")
+                        .WithMany("ToRoutes")
+                        .HasForeignKey("ToId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("From");
+
+                    b.Navigation("To");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Identity.AppRole", null)
@@ -269,6 +477,37 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Company", b =>
+                {
+                    b.Navigation("Providers");
+                });
+
+            modelBuilder.Entity("Domain.Leg", b =>
+                {
+                    b.Navigation("Providers");
+                });
+
+            modelBuilder.Entity("Domain.Location", b =>
+                {
+                    b.Navigation("FromRoutes");
+
+                    b.Navigation("ToRoutes");
+                });
+
+            modelBuilder.Entity("Domain.RouteInfo", b =>
+                {
+                    b.Navigation("Legs");
+                });
+
+            modelBuilder.Entity("Domain.TravelPrice", b =>
+                {
+                    b.Navigation("Companies");
+
+                    b.Navigation("Legs");
+
+                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }

@@ -98,7 +98,11 @@ public class ApiBackgroundService: BackgroundService
     {
         return travelPrice.Legs!
             .SelectMany(l => l.Providers!)
-            .Select(p => p.Company!)
+            .Select(p =>
+            {
+                p.Company!.TravelPriceId = travelPrice.Id;
+                return p.Company;
+            })
             .GroupBy(c => c.Id)
             .Select(c => c.First())
             .ToList();
@@ -122,6 +126,8 @@ public class ApiBackgroundService: BackgroundService
             leg.RouteInfoId = leg.RouteInfo!.Id;
             leg.RouteInfo.FromId = leg.RouteInfo.From!.Id;
             leg.RouteInfo.ToId = leg.RouteInfo.To!.Id;
+            leg.RouteInfo.From.TravelPriceId = travelPrice.Id;
+            leg.RouteInfo.To.TravelPriceId = travelPrice.Id;
             
             foreach (var legProvider in leg.Providers?? [])
             {

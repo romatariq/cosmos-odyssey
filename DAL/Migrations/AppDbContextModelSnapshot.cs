@@ -32,7 +32,12 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("TravelPriceId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TravelPriceId");
 
                     b.ToTable("Companies");
                 });
@@ -160,7 +165,12 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("TravelPriceId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TravelPriceId");
 
                     b.ToTable("Locations");
                 });
@@ -336,6 +346,17 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Company", b =>
+                {
+                    b.HasOne("Domain.TravelPrice", "TravelPrice")
+                        .WithMany("Companies")
+                        .HasForeignKey("TravelPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TravelPrice");
+                });
+
             modelBuilder.Entity("Domain.Leg", b =>
                 {
                     b.HasOne("Domain.RouteInfo", "RouteInfo")
@@ -351,6 +372,17 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("RouteInfo");
+
+                    b.Navigation("TravelPrice");
+                });
+
+            modelBuilder.Entity("Domain.Location", b =>
+                {
+                    b.HasOne("Domain.TravelPrice", "TravelPrice")
+                        .WithMany("Locations")
+                        .HasForeignKey("TravelPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TravelPrice");
                 });
@@ -468,7 +500,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Domain.TravelPrice", b =>
                 {
+                    b.Navigation("Companies");
+
                     b.Navigation("Legs");
+
+                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }
