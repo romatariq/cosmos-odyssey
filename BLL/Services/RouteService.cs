@@ -1,4 +1,5 @@
 using DAL;
+using Domain.Constants;
 using DTO.BLL;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,18 @@ public class RouteService
     }
 
     
-    public async Task<List<Trip>> GetAllTrips(string from, string to)
+    public async Task<List<Trip>> GetAllTrips(EPlanet from, EPlanet to)
     {
+        var fromStr = Planets.AllPlanets[(int) from];
+        var toStr = Planets.AllPlanets[(int) to];
+        
         var routes = await GetAllRoutes();
-        var validRoutes = RouteCalculator.GetAllPossibleTrips(from, to, routes.ToList());
+        var validRoutes = RouteCalculator.GetAllPossibleTrips(fromStr, toStr, routes.ToList());
         
         return validRoutes.Select(route => new Trip()
         {
-            From = from,
-            To = to,
+            From = fromStr,
+            To = toStr,
             TotalPrice = route.Sum(f => f.Price),
             TotalDistance = route.Sum(f => f.Distance),
             TotalTravelTime = route.Last().Arrival - route.First().Departure,

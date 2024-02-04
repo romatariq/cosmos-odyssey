@@ -21,7 +21,7 @@ namespace WebApp.Pages_Providers
 
         public async Task OnGetAsync()
         {
-            Trips = await _service.GetAllTrips(Planets.Venus, Planets.Mars);
+            Trips = await _service.GetAllTrips(EPlanet.Jupiter, EPlanet.Mars);
         }
     }
 }
