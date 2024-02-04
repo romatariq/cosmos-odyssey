@@ -45,27 +45,16 @@ public static class RouteCalculator
     
     private static Dictionary<string, List<Flight>> GetFlightsGraph(List<Route> routes)
     {
-        var graph = GetInitialFlightsGraph();
+        var graph = new Dictionary<string, List<Flight>>();
         foreach (var route in routes)
         {
+            if (!graph.ContainsKey(route.From))
+            {
+                graph[route.From] = [];
+            }
             graph[route.From].AddRange(route.Flights);
         }
         return graph;
     }
     
-    
-    private static Dictionary<string, List<Flight>> GetInitialFlightsGraph()
-    {
-        return new Dictionary<string, List<Flight>>()
-        {
-            ["Mercury"] = [],
-            ["Venus"] = [],
-            ["Earth"] = [],
-            ["Mars"] = [],
-            ["Jupiter"] = [],
-            ["Saturn"] = [],
-            ["Uranus"] = [],
-            ["Neptune"] = [],
-        };
-    }
 }
