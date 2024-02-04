@@ -7,6 +7,8 @@ public class Flight
     public string From { get; set; } = default!;
 
     public string To { get; set; } = default!;
+
+    public string Company { get; set; } = default!;
     
     public DateTime Departure { get; set; }
 

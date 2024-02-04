@@ -12,5 +12,7 @@ public class Trip
 
     public TimeSpan TotalTravelTime { get; set; }
 
+    public List<string> Companies { get; set; } = default!;
+
     public List<Flight> Flights { get; set; } = default!;
 }

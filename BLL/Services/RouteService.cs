@@ -26,7 +26,8 @@ public class RouteService
             TotalPrice = route.Sum(f => f.Price),
             TotalDistance = route.Sum(f => f.Distance),
             TotalTravelTime = route.Last().Arrival - route.First().Departure,
-            Flights = route
+            Flights = route,
+            Companies = route.Select(f => f.Company).Distinct().ToList()
         }).ToList();
     }
 
@@ -49,6 +50,7 @@ public class RouteService
                 Flights = l.Providers!.Select(p => new Flight()
                 {
                     ProviderId = p.Id,
+                    Company = p.Company!.Name,
                     Price = p.Price,
                     Departure = p.FlightStart,
                     Arrival = p.FlightEnd,
