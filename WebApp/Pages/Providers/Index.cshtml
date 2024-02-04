@@ -60,12 +60,15 @@
     var travelTime = item.To - item.From;
     var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
     var route = item.Flights.Count > 1 ? $"{item.Flights.Count - 1} stops" : "Direct";
+    var from = item.From.ToString("yyyy/MM/dd HH:mm");
+    var to = item.To.ToString("yyyy/MM/dd HH:mm");
+    
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.From)
+                @Html.DisplayFor(modelItem => from)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.To)
+                @Html.DisplayFor(modelItem => to)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => companies)
@@ -74,7 +77,7 @@
                 @route
             </td>
             <td>
-                @Html.DisplayFor(modelItem => travelTimeStr)
+                @travelTimeStr
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Distance)
