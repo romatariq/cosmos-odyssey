@@ -35,19 +35,19 @@ namespace WebApp.Pages_Providers
         public SelectList ToSelectList { get; set; }
 
         [BindProperty]
-        public EPlanet SelectedFrom { get; set; } = EPlanet.Earth;
+        public EPlanet From { get; set; } = EPlanet.Earth;
         
         [BindProperty]
-        public EPlanet SelectedTo { get; set; } = EPlanet.Mars;
+        public EPlanet To { get; set; } = EPlanet.Mars;
 
-        public async Task OnGetAsync(EPlanet? selectedFrom, EPlanet? selectedTo)
+        public async Task OnGetAsync(EPlanet? from, EPlanet? to)
         {
-            if (selectedFrom != null && selectedTo != null)
+            if (from != null && to != null)
             {
-                SelectedFrom = selectedFrom.Value;
-                SelectedTo = selectedTo.Value;
+                From = from.Value;
+                To = to.Value;
             }
-            Trips = await _service.GetAllTrips(SelectedFrom, SelectedTo);
+            Trips = await _service.GetAllTrips(From, To);
         }
     }
 }

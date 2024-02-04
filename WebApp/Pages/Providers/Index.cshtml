@@ -8,16 +8,19 @@
 <h1>Index</h1>
 
 <form method="get">
-    <div>
-        <label asp-for="SelectedFrom" class="control-label"></label>
-        <select asp-for="SelectedFrom" class ="form-control" asp-items="Model.FromSelectList"></select>
-    
-        <label asp-for="SelectedTo" class="control-label"></label>
-        <select asp-for="SelectedTo" class ="form-control" asp-items="Model.ToSelectList"></select>
+    <div class="d-flex mb-1">
+        <div class="col-2">
+            <label asp-for="From" class="control-label"></label>
+            <select asp-for="From" class="form-control" asp-items="Model.FromSelectList"></select>
+        </div>
+
+        <div class="col-2 mx-2">
+            <label asp-for="To" class="control-label"></label>
+            <select asp-for="To" class="form-control" asp-items="Model.ToSelectList"></select>
+        </div>
+        
     </div>
-    
-    
-    <input type="submit" value="Filter"/>
+    <input type="submit" class="btn btn-primary" value="Filter"/>
 </form>
 
 <table class="table">
