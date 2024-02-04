@@ -33,8 +33,8 @@ public static class RouteCalculator
             {
                 if (visited.Contains(flight.To) || 
                     (currentTrip.Count > 0 && 
-                     flight.Departure.AddMinutes(30) < currentTrip.Last().Arrival &&
-                     flight.Departure < currentTrip.Last().Arrival.AddHours(24)))
+                     (currentTrip.Last().Arrival.AddMinutes(30) > flight.Departure ||
+                      currentTrip.Last().Arrival.AddHours(24) > flight.Departure)))
                 {
                     continue;
                 }
