@@ -1,4 +1,4 @@
-namespace Domain.Constants;
+namespace Helpers.Constants;
 
 public enum EPlanet
 {

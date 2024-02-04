@@ -1,4 +1,4 @@
-namespace Domain.Constants;
+namespace Helpers.Constants;
 
 public static class Planets
 {
@@ -12,7 +12,7 @@ public static class Planets
     private const string Neptune = "Neptune";
     
     
-    public static string[] AllPlanets =
+    public static readonly string[] AllPlanets =
     [
         Mercury,
         Venus,
