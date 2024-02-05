@@ -43,8 +43,8 @@ public class ReservationService
                         Distance = f.Distance,
                         From = f.From,
                         To = f.To,
-                        Company = f.Company
-                        
+                        Company = f.Company,
+                        Price = f.Price
                     }).OrderBy(f => f.Departure).ToList()
             })
             .FirstOrDefaultAsync();
