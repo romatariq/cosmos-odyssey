@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Domain.Identity;
 using Domain.OptimisedSchema;
 
@@ -7,8 +8,10 @@ public class Reservation
 {
     public Guid Id { get; set; }
 
+    [MinLength(1), MaxLength(200)]
     public string FirstName { get; set; } = default!;
-    
+
+    [MinLength(1), MaxLength(200)]
     public string LastName { get; set; } = default!;
 
     public Guid TripId { get; set; }
