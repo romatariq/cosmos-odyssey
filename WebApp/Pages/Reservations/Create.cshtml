@@ -39,10 +39,9 @@
         <th>Departure</th>
         <th>Arrival</th>
         <th>Company</th>
-        <th>Travel time</th>
+        <th>Flight time + layover</th>
         <th>Distance</th>
         <th>Price</th>
-        <th>Layover</th>
     </tr>
     </thead>
     <tbody>
@@ -58,10 +57,9 @@
             <td>@flight.Departure.GetFormattedDateTime()</td>
             <td>@flight.Arrival.GetFormattedDateTime()</td>
             <td>@flight.Company</td>
-            <td>@(flight.Arrival.Subtract(flight.Departure).GetFormattedTimeDifference())</td>
+            <td>@(flight.Arrival.Subtract(flight.Departure).GetFormattedTimeDifference())@(shouldDisplayLayover ? $" + {layover}" : "")</td>
             <td>@flight.Distance</td>
             <td>@flight.Price</td>
-            <td>@(shouldDisplayLayover ? layover : "")</td>
         </tr>
         
         if (i == flightsCount - 1 && i != 0)
