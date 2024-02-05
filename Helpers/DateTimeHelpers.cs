@@ -11,4 +11,11 @@ public static class DateTimeHelpers
     {
         return dateTime.Subtract(DateTime.UtcNow).TotalSeconds;
     }
+
+    public static string GetFormattedDateTime(this DateTime dateTime)
+    {
+        const string format = "dd.MM HH:mm";
+        return dateTime.ToString(format);
+    }
+    
 }

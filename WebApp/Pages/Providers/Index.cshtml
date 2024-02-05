@@ -1,4 +1,5 @@
 @page
+@using Helpers
 @model WebApp.Pages_Providers.IndexModel
 
 @{
@@ -96,16 +97,13 @@
     var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
     var stops = getRouteText(item.Flights.Count);
     var route = string.Join(" - ", item.Flights.Select(f => f.From).Append(item.Flights.Last().To));
-    const string dateFormat = "dd.MM HH:mm";
-    var from = item.Departure.ToString(dateFormat);
-    var to = item.Arrival.ToString(dateFormat);
     
         <tr>
             <td>
-                @from
+                @item.Departure.GetFormattedDateTime()
             </td>
             <td>
-                @to
+                @item.Arrival.GetFormattedDateTime()
             </td>
             <td>
                 @Html.DisplayFor(modelItem => companies)
