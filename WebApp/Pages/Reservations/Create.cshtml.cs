@@ -1,5 +1,6 @@
 using BLL;
 using Domain;
+using DTO.Public;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace WebApp.Pages_Reservations
             _uow = uow;
         }
 
-        public IActionResult OnGet(Guid tripId)
+        public async Task<IActionResult> OnGet(Guid tripId)
         {
             if (tripId == Guid.Empty)
             {
@@ -25,11 +26,22 @@ namespace WebApp.Pages_Reservations
             }
             
             TripId = tripId;
+            var trip = await _uow.ReservationService.GetTrip(TripId);
+            if (trip == null)
+            {
+                return RedirectToPage("/Providers/Index");
+            }
+            
+            Trip = trip;
+            
             return Page();
         }
 
         [BindProperty]
         public Reservation Reservation { get; set; } = default!;
+        
+        [BindProperty]
+        public Trip Trip { get; set; } = default!;
 
         [BindProperty]
         public Guid TripId { get; set; }
@@ -41,6 +53,13 @@ namespace WebApp.Pages_Reservations
             Reservation.UserId = User.GetUserId();
             if (!ModelState.IsValid)
             {
+                var trip = await _uow.ReservationService.GetTrip(TripId);
+                if (trip == null)
+                {
+                    return RedirectToPage("/Providers/Index");
+                }
+
+                Trip = trip;
                 return Page();
             }
             
