@@ -1,3 +1,4 @@
+using BLL;
 using DAL;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(
 builder.Services.AddAuthentication();
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<UOW>();
 
 builder.Services.AddHostedService<ApiBackgroundService>();
 

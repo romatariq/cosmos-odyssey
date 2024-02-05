@@ -1,5 +1,4 @@
-using BLL.Services;
-using DAL;
+using BLL;
 using DTO.Public;
 using Helpers.Constants;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +9,11 @@ namespace WebApp.Pages_Providers
 {
     public class IndexModel : PageModel
     {
-        private readonly RouteService _service;
+        private readonly UOW _uow;
 
-        public IndexModel(AppDbContext context)
+        public IndexModel(UOW uow)
         {
-            _service = new RouteService(context);
+            _uow = uow;
 
             var planetEnumValues = Enum.GetValues(typeof(EPlanet))
                 .Cast<EPlanet>()
@@ -69,7 +68,8 @@ namespace WebApp.Pages_Providers
             Filter = filter;
             PageNr = Math.Max(1, pageNr);
             
-            var (trips, pageCount) = await _service.GetAllTrips(From, To, Sort, filter?.Trim(), PageNr, 15);
+            var (trips, pageCount) = await _uow.RouteService
+                .GetAllTrips(From, To, Sort, filter?.Trim(), PageNr, 15);
             Trips = trips;
             PageCount = pageCount;
         }
