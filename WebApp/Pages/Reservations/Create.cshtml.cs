@@ -31,6 +31,7 @@ namespace WebApp.Pages_Reservations
         [BindProperty]
         public Reservation Reservation { get; set; } = default!;
 
+        [BindProperty]
         public Guid TripId { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
