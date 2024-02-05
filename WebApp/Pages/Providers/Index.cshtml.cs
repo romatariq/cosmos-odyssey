@@ -69,7 +69,7 @@ namespace WebApp.Pages_Providers
             Filter = filter;
             PageNr = Math.Max(1, pageNr);
             
-            var (trips, pageCount) = await _service.GetAllTrips(From, To, filter?.Trim(), PageNr, 15);
+            var (trips, pageCount) = await _service.GetAllTrips(From, To, Sort, filter?.Trim(), PageNr, 15);
             Trips = trips;
             PageCount = pageCount;
         }
