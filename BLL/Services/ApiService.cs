@@ -1,6 +1,8 @@
 using System.Text.Json;
 using DAL;
 using Domain;
+using DTO.BLL;
+using Helpers.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
@@ -42,9 +44,97 @@ public class ApiService
         ParseTravelPriceToMatchDomain(travelPrice);
         await _context.TravelPrices.AddAsync(travelPrice);
             
-        await DeleteOldTravelPrices(_context);
+        var flights = MapProviderToDomainFlights(travelPrice, companies);
+        await _context.Flights.AddRangeAsync(flights);
+        
+        var validTrips = GetAllPossibleTrips(travelPrice, companies);
+        await _context.Trips.AddRangeAsync(validTrips);
             
+        await DeleteOldTravelPrices(_context);
         await _context.SaveChangesAsync();
+    }
+
+
+    private List<Domain.OptimisedSchema.Trip> GetAllPossibleTrips(TravelPrice travelPrice, List<Company> companies)
+    {
+        var allRoutes = MapTravelPriceToRoutes(travelPrice, companies);
+        
+        var allValidTrips = new List<Domain.OptimisedSchema.Trip>();
+
+        foreach (var from in Planets.AllPlanets)
+        {
+            foreach (var to in Planets.AllPlanets)
+            {
+                if (from == to) continue;
+                
+                var validRoutes = RouteCalculator.GetAllPossibleTrips(from, to, allRoutes);
+                var trips = validRoutes.Select(trip => new Domain.OptimisedSchema.Trip()
+                    {
+                        From = trip.First().From,
+                        To = trip.Last().To,
+                        TravelPriceId = travelPrice.Id,
+                        TripFlights = trip.Select(f => new Domain.OptimisedSchema.TripFlight()
+                        {
+                            FlightId = f.ProviderId
+                        }).ToList()
+                    }).ToList();
+                allValidTrips.AddRange(trips);
+            }
+        }
+
+        return allValidTrips;
+    }
+
+    private IEnumerable<Domain.OptimisedSchema.Flight> MapProviderToDomainFlights(TravelPrice travelPrice,
+        List<Company> companies)
+    {
+        var companiesMap = GetCompanyIdNameMap(companies);
+        return travelPrice.Legs!
+            .SelectMany(l => l.Providers!
+            .Select(p => new Domain.OptimisedSchema.Flight()
+            {
+                Id = p.Id,
+                From = l.RouteInfo!.From!.Name,
+                To = l.RouteInfo!.To!.Name,
+                Departure = p.FlightStart,
+                Arrival = p.FlightEnd,
+                Distance = l.RouteInfo!.Distance,
+                Price = p.Price,
+                Company = companiesMap[p.CompanyId],
+                ProviderId = p.Id
+            })
+            .ToList());
+    }
+
+
+    private Dictionary<Guid, string> GetCompanyIdNameMap(List<Company> companies)
+    {
+        return companies.ToDictionary(c => c.Id, c => c.Name);
+    }
+
+    private List<Route> MapTravelPriceToRoutes(TravelPrice travelPrice, List<Company> companies)
+    {
+        var companiesMap = GetCompanyIdNameMap(companies);
+        
+        return travelPrice
+            .Legs!
+            .Select(l => new Route()
+            {
+                From = l.RouteInfo!.From!.Name,
+                To = l.RouteInfo!.To!.Name,
+                Distance = l.RouteInfo!.Distance,
+                Flights = l.Providers!.Select(p => new Flight()
+                {
+                    ProviderId = p.Id,
+                    Company = companiesMap[p.CompanyId],
+                    Price = p.Price,
+                    Departure = p.FlightStart,
+                    Arrival = p.FlightEnd,
+                    From = l.RouteInfo!.From!.Name,
+                    To = l.RouteInfo!.To!.Name,
+                    Distance = l.RouteInfo!.Distance,
+                }).ToList()
+            }).ToList();
     }
     
     

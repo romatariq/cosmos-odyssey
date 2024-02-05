@@ -1,5 +1,5 @@
 using DAL;
-using DTO.BLL;
+using DTO.DAL;
 using Helpers.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,55 +21,43 @@ public class RouteService
 
         var fromStr = Planets.AllPlanets[(int)from];
         var toStr = Planets.AllPlanets[(int)to];
+        filter = filter?.Trim().ToLower();
 
-        var routes = await GetAllRoutes(filter);
-        var validRoutes = RouteCalculator.GetAllPossibleTrips(fromStr, toStr, routes.ToList());
-
-        return validRoutes.Select(route => new Trip()
-        {
-            From = route.First().Departure,
-            To = route.Last().Arrival,
-            Price = route.Sum(f => f.Price),
-            Distance = route.Sum(f => f.Distance),
-            Flights = route,
-            Companies = route.Select(f => f.Company).Distinct().ToList()
-        }).ToList();
-    }
-
-    private async Task<IEnumerable<Route>> GetAllRoutes(string? filter)
-    {
-        var routes = await _context.TravelPrices
-            .Include(tp => tp.Legs!)
-            .ThenInclude(l => l.RouteInfo!.From)
-            .Include(tp => tp.Legs!)
-            .ThenInclude(l => l.RouteInfo!.To)
-            .Include(tp => tp.Legs!)
-            .ThenInclude(l => l.Providers!)
-            .ThenInclude(p => p.Company)
-            .Where(tp => tp.ValidUntil > DateTime.UtcNow)
-            .Select(tp => tp.Legs!
-                .Select(l => new Route()
+        return await _context.Trips
+            .Include(t => t.TravelPrice)
+            .Include(t => t.TripFlights!)
+            .ThenInclude(tp => tp.Flight)
+            .Where(t => 
+                t.From == fromStr &&
+                t.To == toStr &&
+                t.TravelPrice!.ValidUntil > DateTime.UtcNow &&
+                t.TripFlights!.Any(f => filter == null || f.Flight!.Company.ToLower().Contains(filter)))
+            .Select(t => new
+            {
+                flights = t.TripFlights!.Select(f => f.Flight!).OrderBy(f => f.Departure).ToList(),
+                from = t.From,
+                to = t,
+                id = t.Id
+            })
+            .Select(t => new Trip()
+            {
+                Id = t.id,
+                Departure = t.flights.First().Departure,
+                Arrival = t.flights.Last().Arrival,
+                Price = t.flights.Sum(f => f.Price),
+                Distance = t.flights.Sum(f => f.Distance),
+                Flights = t.flights.Select(f => new Flight()
                 {
-                    From = l.RouteInfo!.From!.Name,
-                    To = l.RouteInfo!.To!.Name,
-                    Distance = l.RouteInfo!.Distance,
-                    Flights = l.Providers!
-                        .Where(p => filter == null ||
-                                    p.Company!.Name.ToLower().Contains(filter.ToLower()))
-                        .Select(p => new Flight()
-                        {
-                            ProviderId = p.Id,
-                            Company = p.Company!.Name,
-                            Price = p.Price,
-                            Departure = p.FlightStart,
-                            Arrival = p.FlightEnd,
-                            From = l.RouteInfo!.From!.Name,
-                            To = l.RouteInfo!.To!.Name,
-                            Distance = l.RouteInfo!.Distance,
-                        }).ToList()
-                }))
-            .SingleOrDefaultAsync();
-
-        return routes ?? [];
+                    Id = f.Id,
+                    From = f.From,
+                    To = f.To,
+                    Departure = f.Departure,
+                    Arrival = f.Arrival,
+                    Distance = f.Distance,
+                    Price = f.Price,
+                    Company = f.Company
+                }).ToList(),
+            }).ToListAsync();
     }
+
 }

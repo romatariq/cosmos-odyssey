@@ -1,3 +1,5 @@
+using Domain.OptimisedSchema;
+
 namespace Domain;
 
 public class Provider
@@ -17,4 +19,6 @@ public class Provider
 
     public Guid LegId { get; set; }
     public Leg? Leg { get; set; }
+
+    public ICollection<Flight>? Flights { get; set; }
 }

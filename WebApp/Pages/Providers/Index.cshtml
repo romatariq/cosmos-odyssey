@@ -39,13 +39,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Trips[0].From)
+                @Html.DisplayNameFor(model => model.Trips[0].Departure)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trips[0].To)
+                @Html.DisplayNameFor(model => model.Trips[0].Arrival)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trips[0].Companies)
+                Companies
+            </th>
+            <th>
+                Stops
             </th>
             <th>
                 Route
@@ -63,23 +66,27 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Trips) {
-    var companies = string.Join(", ", item.Companies.Order());
-    var travelTime = item.To - item.From;
+    var companies = string.Join(", ", item.Flights.Select(f => f.Company).Order());
+    var travelTime = item.Arrival - item.Departure;
     var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
-    var route = getRouteText(item.Flights.Count);
-    const string dateFormat = "dd.MM. HH:mm";
-    var from = item.From.ToString(dateFormat);
-    var to = item.To.ToString(dateFormat);
+    var stops = getRouteText(item.Flights.Count);
+    var route = string.Join(" - ", item.Flights.Select(f => f.From).Append(item.Flights.Last().To));
+    const string dateFormat = "dd.MM HH:mm";
+    var from = item.Departure.ToString(dateFormat);
+    var to = item.Arrival.ToString(dateFormat);
     
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => from)
+                @from
             </td>
             <td>
-                @Html.DisplayFor(modelItem => to)
+                @to
             </td>
             <td>
                 @Html.DisplayFor(modelItem => companies)
+            </td>
+            <td>
+                @stops
             </td>
             <td>
                 @route

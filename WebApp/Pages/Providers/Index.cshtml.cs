@@ -29,7 +29,7 @@ namespace WebApp.Pages_Providers
             ToSelectList = new SelectList(enumValues, "Value", "Text");
         }
 
-        public IList<Trip> Trips { get;set; } = default!;
+        public IList<DTO.DAL.Trip> Trips { get;set; } = default!;
         
         public SelectList FromSelectList { get; set; }
         public SelectList ToSelectList { get; set; }

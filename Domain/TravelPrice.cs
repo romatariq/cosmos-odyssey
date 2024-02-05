@@ -1,3 +1,5 @@
+using Domain.OptimisedSchema;
+
 namespace Domain;
 
 public class TravelPrice
@@ -11,4 +13,6 @@ public class TravelPrice
     // For cascade delete
     public ICollection<Location>? Locations { get; set; }
     public ICollection<Company>? Companies { get; set; }
+    
+    public ICollection<Trip>? Trips { get; set; }
 }
