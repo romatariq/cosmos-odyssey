@@ -5,9 +5,9 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>@Model.Trip.Flights.First().From - @Model.Trip.Flights.Last().To</h1>
+<h1>Reservation</h1>
 
-<h4>Reservation</h4>
+<h4>@Model.Trip.Flights.First().From - @Model.Trip.Flights.Last().To</h4>
 <hr/>
 
 <form method="post">
@@ -24,7 +24,7 @@
             <span asp-validation-for="Reservation.LastName" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
         <input type="hidden" asp-for="TripId"/>
         <input type="submit" value="Reserve" class="btn btn-primary"/>
     </div>
@@ -37,6 +37,7 @@
         <th>To</th>
         <th>Departure</th>
         <th>Arrival</th>
+        <th>Company</th>
         <th>Travel time</th>
         <th>Distance</th>
         <th>Price</th>
@@ -48,13 +49,14 @@
     {
         var flight = Model.Trip.Flights[i];
         var flightsCount = Model.Trip.Flights.Count;
-        var layover = i > 0 ? (Model.Trip.Flights[i].Departure - Model.Trip.Flights[i - 1].Arrival).TotalHours : 0;
         var shouldDisplayLayover = flightsCount > 1 && i != flightsCount - 1;
+        var layover = shouldDisplayLayover ? (Model.Trip.Flights[i + 1].Departure - Model.Trip.Flights[i].Arrival).TotalHours : 0;
         <tr>
             <td>@flight.From</td>
             <td>@flight.To</td>
             <td>@flight.Departure</td>
             <td>@flight.Arrival</td>
+            <td>@flight.Company</td>
             <td>@(flight.Arrival - flight.Departure)</td>
             <td>@flight.Distance</td>
             <td>@flight.Price</td>
@@ -64,23 +66,20 @@
         if (i == flightsCount - 1)
         {
             <tr>
-                <td colspan="4"></td>
-                <td>@((Model.Trip.Arrival - Model.Trip.Departure).Hours)h</td>
-                <td>@Model.Trip.Distance</td>
-                <td>@Model.Trip.Price</td>
-                <td></td>
-            </tr>
-            <tr class="fw-bold">
-                <td colspan="5"></td>
-                <td>Total price</td>
-                <td>@Model.Trip.Price</td>
-                <td></td>
+                <td class="border-bottom-0" colspan="5"></td>
+                <td class="border-bottom-0">@((Model.Trip.Arrival - Model.Trip.Departure).Hours)h</td>
+                <td class="border-bottom-0">@Model.Trip.Distance</td>
+                <td class="border-bottom-0">@Model.Trip.Price</td>
             </tr>
         }
     }
     </tbody>
 </table>
 
+<div class="text-end fw-bold mt-5">
+    Total price: @Model.Trip.Price
+</div>
+
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index">Back to Reservations</a>
 </div>
