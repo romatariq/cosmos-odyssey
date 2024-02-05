@@ -1,6 +1,8 @@
+using System.Text.RegularExpressions;
+
 namespace Helpers;
 
-public static class DateTimeHelpers
+public static partial class DateTimeHelpers
 {
     public static double GetTimeDifferenceFromNowInSecondsWithSpare(this DateTime dateTime)
     {
@@ -20,11 +22,10 @@ public static class DateTimeHelpers
     
     public static string GetFormattedTimeDifference(this TimeSpan timespan)
     {
-        var result = $"{Math.Round(timespan.TotalDays)}d {timespan.Hours}h {timespan.Minutes}m";
-        
-        result = result.Replace("0d ", "");
-        result = result.Replace("0h ", "");
-        return result.Replace(" 0m", "");
+        var result = $"{timespan.Days}d {timespan.Hours}h {timespan.Minutes}m";
+        return MyRegex().Replace(result, "");
     }
-    
+
+    [GeneratedRegex(@"(?<!\d)0([dhm])")]
+    private static partial Regex MyRegex();
 }
