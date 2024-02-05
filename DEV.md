@@ -1,6 +1,6 @@
 # create migration
 ~~~bash
-dotnet ef migrations add PrecalculatedFieldsToTrip --project DAL --startup-project WebApp --context AppDbContext
+dotnet ef migrations add Reservation --project DAL --startup-project WebApp --context AppDbContext
 dotnet ef database update --project DAL --startup-project WebApp --context AppDbContext
 ~~~
 

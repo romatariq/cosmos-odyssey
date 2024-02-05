@@ -21,4 +21,6 @@ public class Trip
 
 
     public ICollection<TripFlight>? TripFlights { get; set; }
+    
+    public ICollection<Reservation>? Reservations { get; set; }
 }
