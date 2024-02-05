@@ -38,7 +38,7 @@ namespace WebApp.Pages_Reservations
         }
 
         [BindProperty]
-        public Reservation Reservation { get; set; } = default!;
+        public Domain.Reservation Reservation { get; set; } = default!;
         
         [BindProperty]
         public Trip Trip { get; set; } = default!;

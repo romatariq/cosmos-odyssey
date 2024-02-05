@@ -14,9 +14,30 @@ public class ReservationService
         _context = context;
     }
     
-    public async Task CreateReservation(Reservation reservation)
+    public async Task CreateReservation(Domain.Reservation reservation)
     {
         await _context.Reservations.AddAsync(reservation);
+    }
+    
+    public async Task<List<DTO.Public.Reservation>> GetReservations(Guid userId)
+    {
+        return await _context.Reservations
+            .Include(r => r.Trip!)
+            .ThenInclude(t => t.TripFlights!)
+            .ThenInclude(tf => tf.Flight!)
+            .Where(r => r.UserId == userId)
+            .Select(r => new DTO.Public.Reservation()
+            {
+                Id = r.Id,
+                Departure = r.Trip!.Departure,
+                Route = string.Join(" - ", r.Trip.TripFlights!
+                    .Select(tf => tf.Flight!)
+                    .OrderBy(tf => tf.Departure)
+                    .Select(f => f.From)
+                    .ToList()) + $" - {r.Trip.To}",
+                FirstName = r.FirstName,
+                LastName = r.LastName
+            }).ToListAsync();
     }
     
     public async Task<Trip?> GetTrip(Guid tripId)
@@ -50,7 +71,7 @@ public class ReservationService
             .FirstOrDefaultAsync();
     }
     
-    public async Task<bool> TripStillReservable(Reservation reservation)
+    public async Task<bool> TripStillReservable(Domain.Reservation reservation)
     {
         return await _context.Trips
             .Include(t => t.TravelPrice)
