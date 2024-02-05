@@ -19,15 +19,21 @@ namespace WebApp.Pages_Reservations
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(Guid tripId)
         {
-        ViewData["TripId"] = new SelectList(_context.Trips, "Id", "From");
-        ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
+            if (tripId == Guid.Empty)
+            {
+                return RedirectToPage("/Providers/Index");
+            }
+            
+            TripId = tripId;
             return Page();
         }
 
         [BindProperty]
         public Reservation Reservation { get; set; } = default!;
+
+        public Guid TripId { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
