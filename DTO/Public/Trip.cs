@@ -1,4 +1,4 @@
-namespace DTO.DAL;
+namespace DTO.Public;
 
 public class Trip
 {

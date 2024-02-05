@@ -1,5 +1,5 @@
 using DAL;
-using DTO.DAL;
+using DTO.Public;
 using Helpers;
 using Helpers.Constants;
 using Microsoft.EntityFrameworkCore;
