@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BLL;
+using Domain;
+using Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using DAL;
-using Domain;
 
 namespace WebApp.Pages_Reservations
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly DAL.AppDbContext _context;
+        private readonly UOW _uow;
 
-        public CreateModel(DAL.AppDbContext context)
+        public CreateModel(UOW uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         public IActionResult OnGet(Guid tripId)
@@ -38,13 +36,20 @@ namespace WebApp.Pages_Reservations
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            Reservation.TripId = TripId;
+            Reservation.UserId = User.GetUserId();
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+            
+            if (!await _uow.ReservationService.TripStillReservable(Reservation))
+            {
+                return RedirectToPage("/Providers/Index");
+            }
 
-            _context.Reservations.Add(Reservation);
-            await _context.SaveChangesAsync();
+            await _uow.ReservationService.CreateReservation(Reservation);
+            await _uow.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

@@ -20,10 +20,14 @@ public class UOW
     
     private ApiService? _apiService;
     private RouteService? _routeService;
+    private ReservationService? _reservationService;
     
     public ApiService ApiService =>
         _apiService ??= new ApiService(_context);    
     
     public RouteService RouteService =>
-        _routeService ??= new RouteService(_context);
+        _routeService ??= new RouteService(_context);    
+    
+    public ReservationService ReservationService =>
+        _reservationService ??= new ReservationService(_context);
 }
