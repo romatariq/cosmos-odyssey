@@ -4,15 +4,15 @@ public static class SortBy
 {
     public static readonly string[] Sort =
     [
-        "Price Asc",
-        "Price Desc",
-        "Distance Asc",
-        "Distance Desc",
-        "Departure Asc",
-        "Departure Desc",
-        "Arrival Asc",
-        "Arrival Desc",
-        "Travel time Asc",
-        "Travel time Desc"
+        "Low Price",
+        "High Price",
+        "Low Distance",
+        "High Distance",
+        "Early Departure",
+        "Late Departure",
+        "Early Arrival",
+        "Late Arrival",
+        "Low Travel Time",
+        "High Travel time"
     ];
 }

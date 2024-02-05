@@ -52,7 +52,7 @@ namespace WebApp.Pages_Providers
         public EPlanet To { get; set; } = EPlanet.Mars;
         
         [BindProperty]
-        public ESortBy Sort { get; set; } = ESortBy.DepartureDesc;
+        public ESortBy Sort { get; set; } = ESortBy.DepartureAsc;
         
         public string? Filter { get; set; }
         public int PageNr { get; set; } = 1;
@@ -65,7 +65,7 @@ namespace WebApp.Pages_Providers
                 From = from.Value;
                 To = to.Value;
             }
-            Sort = sort ?? ESortBy.DepartureDesc;
+            Sort = sort ?? Sort;
             Filter = filter;
             PageNr = Math.Max(1, pageNr);
             
