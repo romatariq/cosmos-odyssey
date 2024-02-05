@@ -20,13 +20,3 @@ html {
 body {
   margin-bottom: 60px;
 }
-
-.page-moving-links {
-  position: absolute;
-  bottom: 100px;
-  right: 40%;
-}
-.page-moving-links span {
-  margin-left: 150px;
-  margin-right: 150px;
-}

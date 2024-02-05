@@ -34,6 +34,20 @@
     </div>
     <input type="submit" class="btn btn-primary" value="Filter"/>
 </form>
+<div class="d-flex my-1">
+    <div class="col-1">
+        @if (Model.PageNr > 1)
+        {
+            <a id="previous-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr - 1)">Previous</a>
+        }
+    </div>        
+    <div class="col-1">
+        @if (Model.PageCount > Model.PageNr)
+        {
+            <a id="next-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr + 1)">Next</a>
+        }
+    </div>
+</div>
 
 <table class="table">
     <thead>
@@ -66,7 +80,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Trips) {
-    var companies = string.Join(", ", item.Flights.Select(f => f.Company).Order());
+    var companies = string.Join(", ", item.Flights.Select(f => f.Company).Distinct().Order());
     var travelTime = item.Arrival - item.Departure;
     var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
     var stops = getRouteText(item.Flights.Count);
@@ -104,17 +118,3 @@
 }
     </tbody>
 </table>
-
-<div class="page-moving-links">
-@if (Model.PageNr > 1)
-{
-    <a id="previous-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr - 1)">Previous</a>
-}
-
-<span></span>
-
-@if (Model.PageCount > Model.PageNr)
-{
-    <a id="next-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr + 1)">Next</a>
-}
-</div>
