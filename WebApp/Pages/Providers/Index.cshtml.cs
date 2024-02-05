@@ -16,7 +16,7 @@ namespace WebApp.Pages_Providers
         {
             _service = new RouteService(context);
 
-            var enumValues = Enum.GetValues(typeof(EPlanet))
+            var planetEnumValues = Enum.GetValues(typeof(EPlanet))
                 .Cast<EPlanet>()
                 .Select(e => new SelectListItem
                 {
@@ -24,15 +24,26 @@ namespace WebApp.Pages_Providers
                     Text = Planets.AllPlanets[(int) e]
                 })
                 .ToList();
+            
+            var sortEnumValues = Enum.GetValues(typeof(ESortBy))
+                .Cast<ESortBy>()
+                .Select(e => new SelectListItem
+                {
+                    Value = e.ToString(),
+                    Text = SortBy.Sort[(int) e]
+                })
+                .ToList();
 
-            FromSelectList = new SelectList(enumValues, "Value", "Text");
-            ToSelectList = new SelectList(enumValues, "Value", "Text");
+            FromSelectList = new SelectList(planetEnumValues, "Value", "Text");
+            ToSelectList = new SelectList(planetEnumValues, "Value", "Text");
+            SortBySelectList = new SelectList(sortEnumValues, "Value", "Text");
         }
 
         public IList<Trip> Trips { get;set; } = default!;
         
         public SelectList FromSelectList { get; set; }
         public SelectList ToSelectList { get; set; }
+        public SelectList SortBySelectList { get; set; }
 
         [BindProperty]
         public EPlanet From { get; set; } = EPlanet.Earth;
@@ -40,17 +51,21 @@ namespace WebApp.Pages_Providers
         [BindProperty]
         public EPlanet To { get; set; } = EPlanet.Mars;
         
+        [BindProperty]
+        public ESortBy Sort { get; set; } = ESortBy.DepartureDesc;
+        
         public string? Filter { get; set; }
         public int PageNr { get; set; } = 1;
         public int PageCount { get; set; } = 1;
 
-        public async Task OnGetAsync(EPlanet? from, EPlanet? to, string? filter, int pageNr = 1)
+        public async Task OnGetAsync(EPlanet? from, EPlanet? to, ESortBy? sort, string? filter, int pageNr = 1)
         {
             if (from != null && to != null)
             {
                 From = from.Value;
                 To = to.Value;
             }
+            Sort = sort ?? ESortBy.DepartureDesc;
             Filter = filter;
             PageNr = Math.Max(1, pageNr);
             
