@@ -18,4 +18,9 @@ public static class DateTimeHelpers
         return dateTime.ToString(format);
     }
     
+    public static string GetFormattedTimeDifference(this TimeSpan timespan)
+    {
+        return $"{Math.Round(timespan.TotalDays)}d {timespan.Hours}h {timespan.Minutes}m";
+    }
+    
 }

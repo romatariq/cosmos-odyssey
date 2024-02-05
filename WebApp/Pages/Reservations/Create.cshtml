@@ -51,24 +51,24 @@
         var flight = Model.Trip.Flights[i];
         var flightsCount = Model.Trip.Flights.Count;
         var shouldDisplayLayover = flightsCount > 1 && i != flightsCount - 1;
-        var layover = shouldDisplayLayover ? (Model.Trip.Flights[i + 1].Departure - Model.Trip.Flights[i].Arrival).TotalHours : 0;
+        var layover = shouldDisplayLayover ? (Model.Trip.Flights[i + 1].Departure - Model.Trip.Flights[i].Arrival).GetFormattedTimeDifference() : "";
         <tr>
             <td>@flight.From</td>
             <td>@flight.To</td>
             <td>@flight.Departure.GetFormattedDateTime()</td>
             <td>@flight.Arrival.GetFormattedDateTime()</td>
             <td>@flight.Company</td>
-            <td>@(flight.Arrival - flight.Departure)</td>
+            <td>@(flight.Arrival.Subtract(flight.Departure).GetFormattedTimeDifference())</td>
             <td>@flight.Distance</td>
             <td>@flight.Price</td>
-            <td>@(shouldDisplayLayover ? $"{Math.Round(layover)}h layover" : "")</td>
+            <td>@(shouldDisplayLayover ? layover : "")</td>
         </tr>
         
         if (i == flightsCount - 1 && i != 0)
         {
             <tr>
                 <td class="border-bottom-0" colspan="5"></td>
-                <td class="border-bottom-0">@((Model.Trip.Arrival - Model.Trip.Departure).Hours)h</td>
+                <td class="border-bottom-0">@((Model.Trip.Arrival - Model.Trip.Departure).GetFormattedTimeDifference())</td>
                 <td class="border-bottom-0">@Model.Trip.Distance</td>
                 <td class="border-bottom-0">@Model.Trip.Price</td>
             </tr>
