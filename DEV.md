@@ -7,5 +7,5 @@ dotnet ef database update --project DAL --startup-project WebApp --context AppDb
 # Scaffold razor pages
 ~~~bash
 cd WebApp
-dotnet aspnet-codegenerator razorpage -m Provider -dc AppDbContext -udl -outDir Pages/Providers –referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Domain.Reservation -dc AppDbContext -udl -outDir Pages/Reservations –referenceScriptLibraries
 ~~~

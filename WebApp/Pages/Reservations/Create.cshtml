@@ -1,0 +1,44 @@
+@page
+@model WebApp.Pages_Reservations.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Reservation.FirstName" class="control-label"></label>
+                <input asp-for="Reservation.FirstName" class="form-control" />
+                <span asp-validation-for="Reservation.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reservation.LastName" class="control-label"></label>
+                <input asp-for="Reservation.LastName" class="form-control" />
+                <span asp-validation-for="Reservation.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reservation.TripId" class="control-label"></label>
+                <select asp-for="Reservation.TripId" class ="form-control" asp-items="ViewBag.TripId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reservation.UserId" class="control-label"></label>
+                <select asp-for="Reservation.UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
