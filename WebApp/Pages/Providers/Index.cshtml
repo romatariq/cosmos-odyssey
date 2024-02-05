@@ -104,3 +104,17 @@
 }
     </tbody>
 </table>
+
+<div class="page-moving-links">
+@if (Model.PageNr > 1)
+{
+    <a id="previous-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr - 1)">Previous</a>
+}
+
+<span></span>
+
+@if (Model.PageCount > Model.PageNr)
+{
+    <a id="next-page" asp-route-from="@Model.From" asp-route-to="@Model.To" asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr + 1)">Next</a>
+}
+</div>

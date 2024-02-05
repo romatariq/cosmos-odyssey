@@ -1,5 +1,6 @@
 using DAL;
 using DTO.DAL;
+using Helpers;
 using Helpers.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,23 +16,30 @@ public class RouteService
     }
 
 
-    public async Task<List<Trip>> GetAllTrips(EPlanet from, EPlanet to, string? filter)
+    public async Task<(List<Trip>, int)> GetAllTrips(EPlanet from, EPlanet to, string? filter, int pageNr, int pageSize)
     {
-        if (from == to) return [];
+        if (from == to) return ([], 1);
 
         var fromStr = Planets.AllPlanets[(int)from];
         var toStr = Planets.AllPlanets[(int)to];
         filter = filter?.Trim().ToLower();
 
-        return await _context.Trips
+        var query = _context.Trips
             .Include(t => t.TravelPrice)
             .Include(t => t.TripFlights!)
             .ThenInclude(tp => tp.Flight)
+            .OrderBy(t => t.From)
             .Where(t => 
                 t.From == fromStr &&
                 t.To == toStr &&
                 t.TravelPrice!.ValidUntil > DateTime.UtcNow &&
                 t.TripFlights!.Any(f => filter == null || f.Flight!.Company.ToLower().Contains(filter)))
+            .AsQueryable();
+            
+        var pageCount = EfHelpers.GetPageCount(await query.CountAsync(), pageSize); 
+            
+        var items = await query
+            .Paging(pageNr, pageSize)
             .Select(t => new
             {
                 flights = t.TripFlights!.Select(f => f.Flight!).OrderBy(f => f.Departure).ToList(),
@@ -58,6 +66,8 @@ public class RouteService
                     Company = f.Company
                 }).ToList(),
             }).ToListAsync();
+
+        return (items, pageCount);
     }
 
 }

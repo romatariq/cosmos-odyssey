@@ -1,6 +1,5 @@
 using BLL.Services;
 using DAL;
-using DTO.BLL;
 using Helpers.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,15 +40,22 @@ namespace WebApp.Pages_Providers
         public EPlanet To { get; set; } = EPlanet.Mars;
         
         public string? Filter { get; set; }
+        public int PageNr { get; set; } = 1;
+        public int PageCount { get; set; } = 1;
 
-        public async Task OnGetAsync(EPlanet? from, EPlanet? to, string? filter)
+        public async Task OnGetAsync(EPlanet? from, EPlanet? to, string? filter, int pageNr = 1)
         {
             if (from != null && to != null)
             {
                 From = from.Value;
                 To = to.Value;
             }
-            Trips = await _service.GetAllTrips(From, To, filter?.Trim());
+            Filter = filter;
+            PageNr = Math.Max(1, pageNr);
+            
+            var (trips, pageCount) = await _service.GetAllTrips(From, To, filter?.Trim(), PageNr, 15);
+            Trips = trips;
+            PageCount = pageCount;
         }
     }
 }
