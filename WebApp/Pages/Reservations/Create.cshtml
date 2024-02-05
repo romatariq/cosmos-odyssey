@@ -9,80 +9,77 @@
 
 <h4>Reservation</h4>
 <hr/>
-<div class="row">
-    <div class="col-md-3">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Reservation.FirstName" class="control-label"></label>
-                <input asp-for="Reservation.FirstName" class="form-control"/>
-                <span asp-validation-for="Reservation.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Reservation.LastName" class="control-label"></label>
-                <input asp-for="Reservation.LastName" class="form-control"/>
-                <span asp-validation-for="Reservation.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="TripId"/>
-                <input type="submit" value="Create" class="btn btn-primary"/>
-            </div>
-        </form>
-    </div>
 
-    <div class="col-md-9">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Departure</th>
-                <th>Arrival</th>
-                <th>Travel time</th>
-                <th>Distance</th>
-                <th>Price</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @for(var i = 0; i < Model.Trip.Flights.Count; i++)
-            {
-                var flight = Model.Trip.Flights[i];
-                var flightsCount = Model.Trip.Flights.Count;
-                var layover = i > 0 ? (Model.Trip.Flights[i].Departure - Model.Trip.Flights[i - 1].Arrival).TotalHours : 0;
-                var shouldDisplayLayover = flightsCount > 1 && i != flightsCount - 1;
-                <tr>
-                    <td>@flight.From</td>
-                    <td>@flight.To</td>
-                    <td>@flight.Departure</td>
-                    <td>@flight.Arrival</td>
-                    <td>@(flight.Arrival - flight.Departure)</td>
-                    <td>@flight.Distance</td>
-                    <td>@flight.Price</td>
-                    <td>@(shouldDisplayLayover ? $"{Math.Round(layover)}h layover" : "")</td>
-                </tr>
-                
-                if (i == flightsCount - 1)
-                {
-                    <tr>
-                        <td colspan="4"></td>
-                        <td>@((Model.Trip.Arrival - Model.Trip.Departure).Hours)h</td>
-                        <td>@Model.Trip.Distance</td>
-                        <td>@Model.Trip.Price</td>
-                        <td></td>
-                    </tr>
-                    <tr class="fw-bold">
-                        <td colspan="5"></td>
-                        <td>Total price</td>
-                        <td>@Model.Trip.Price</td>
-                        <td></td>
-                    </tr>
-                }
-            }
-            </tbody>
-        </table>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="d-flex mb-1">
+        <div class="form-group col-3">
+            <label asp-for="Reservation.FirstName" class="control-label"></label>
+            <input asp-for="Reservation.FirstName" class="form-control"/>
+            <span asp-validation-for="Reservation.FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-3 mx-2">
+            <label asp-for="Reservation.LastName" class="control-label"></label>
+            <input asp-for="Reservation.LastName" class="form-control"/>
+            <span asp-validation-for="Reservation.LastName" class="text-danger"></span>
+        </div>
     </div>
-</div>
+    <div class="form-group">
+        <input type="hidden" asp-for="TripId"/>
+        <input type="submit" value="Reserve" class="btn btn-primary"/>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Departure</th>
+        <th>Arrival</th>
+        <th>Travel time</th>
+        <th>Distance</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(var i = 0; i < Model.Trip.Flights.Count; i++)
+    {
+        var flight = Model.Trip.Flights[i];
+        var flightsCount = Model.Trip.Flights.Count;
+        var layover = i > 0 ? (Model.Trip.Flights[i].Departure - Model.Trip.Flights[i - 1].Arrival).TotalHours : 0;
+        var shouldDisplayLayover = flightsCount > 1 && i != flightsCount - 1;
+        <tr>
+            <td>@flight.From</td>
+            <td>@flight.To</td>
+            <td>@flight.Departure</td>
+            <td>@flight.Arrival</td>
+            <td>@(flight.Arrival - flight.Departure)</td>
+            <td>@flight.Distance</td>
+            <td>@flight.Price</td>
+            <td>@(shouldDisplayLayover ? $"{Math.Round(layover)}h layover" : "")</td>
+        </tr>
+        
+        if (i == flightsCount - 1)
+        {
+            <tr>
+                <td colspan="4"></td>
+                <td>@((Model.Trip.Arrival - Model.Trip.Departure).Hours)h</td>
+                <td>@Model.Trip.Distance</td>
+                <td>@Model.Trip.Price</td>
+                <td></td>
+            </tr>
+            <tr class="fw-bold">
+                <td colspan="5"></td>
+                <td>Total price</td>
+                <td>@Model.Trip.Price</td>
+                <td></td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
 
 <div>
     <a asp-page="Index">Back to List</a>
