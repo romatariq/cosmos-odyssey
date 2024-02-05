@@ -1,8 +1,6 @@
-using System.Text.Json;
+using BLL.Services;
 using DAL;
-using Domain;
 using Helpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp;
 
@@ -10,16 +8,11 @@ public class ApiBackgroundService: BackgroundService
 {
     private readonly ILogger<ApiBackgroundService> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public ApiBackgroundService(ILogger<ApiBackgroundService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
-        _jsonSerializerOptions = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        };
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -48,23 +41,16 @@ public class ApiBackgroundService: BackgroundService
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-        
-        var latestTravelPrice = await context.TravelPrices
-            .OrderByDescending(x => x.ValidUntil)
-            .FirstOrDefaultAsync();
-        
+        var apiService = new ApiService(context);
+
+        var latestTravelPrice = await apiService.GetLatestTravelPrice();
         if (latestTravelPrice?.ValidUntil > DateTime.UtcNow)
         {
             return latestTravelPrice.ValidUntil.GetTimeDifferenceFromNowInSecondsWithSpare();
         }
         
-        using var client = new HttpClient();
         _logger.LogInformation("Fetching travel prices from external API");
-        var result = await client.GetStringAsync("https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices");
-
-        var travelPrice = JsonSerializer.Deserialize<TravelPrice>(result, _jsonSerializerOptions);
-
+        var travelPrice = await apiService.FetchTravelPriceFromApi();
         if (travelPrice == null || travelPrice.Id == latestTravelPrice?.Id)
         {
             var message = latestTravelPrice?.Id != null ? 
@@ -75,15 +61,7 @@ public class ApiBackgroundService: BackgroundService
 
         try
         {
-            var companies = GetUniqueCompanies(travelPrice);
-            await context.Companies.AddRangeAsync(companies);
-
-            ParseTravelPriceToMatchDomain(travelPrice);
-            await context.TravelPrices.AddAsync(travelPrice);
-            
-            await DeleteOldTravelPrices(context);
-            
-            await context.SaveChangesAsync();
+            await apiService.ParseAndSaveTravelPrice(travelPrice);
         }
         catch (Exception e)
         {
@@ -92,50 +70,5 @@ public class ApiBackgroundService: BackgroundService
         }
         
         return travelPrice.ValidUntil.GetTimeDifferenceFromNowInSecondsWithSpare();
-    }
-    
-    
-    private static List<Company> GetUniqueCompanies(TravelPrice travelPrice)
-    {
-        return travelPrice.Legs!
-            .SelectMany(l => l.Providers!)
-            .Select(p =>
-            {
-                p.Company!.TravelPriceId = travelPrice.Id;
-                return p.Company;
-            })
-            .GroupBy(c => c.Id)
-            .Select(c => c.First())
-            .ToList();
-    }
-    
-    private static Task<int> DeleteOldTravelPrices(AppDbContext context)
-    {
-        return context.TravelPrices
-            .OrderByDescending(tp => tp.ValidUntil)
-            .Skip(15)
-            .ExecuteDeleteAsync();
-    }
-    
-
-    private static void ParseTravelPriceToMatchDomain(TravelPrice travelPrice)
-    {
-        foreach (var leg in travelPrice.Legs?? [])
-        {
-            leg.TravelPriceId = travelPrice.Id;
-            
-            leg.RouteInfoId = leg.RouteInfo!.Id;
-            leg.RouteInfo.FromId = leg.RouteInfo.From!.Id;
-            leg.RouteInfo.ToId = leg.RouteInfo.To!.Id;
-            leg.RouteInfo.From.TravelPriceId = travelPrice.Id;
-            leg.RouteInfo.To.TravelPriceId = travelPrice.Id;
-            
-            foreach (var legProvider in leg.Providers?? [])
-            {
-                legProvider.LegId = leg.Id;
-                legProvider.CompanyId = legProvider.Company!.Id;
-                legProvider.Company = null;
-            }
-        }
     }
 }
