@@ -12,10 +12,14 @@ public class UOW
         _context = context;
     }
     
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
+    
     
     private ApiService? _apiService;
     private RouteService? _routeService;
-    
     
     public ApiService ApiService =>
         _apiService ??= new ApiService(_context);    

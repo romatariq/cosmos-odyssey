@@ -1,4 +1,4 @@
-using BLL.Services;
+using BLL;
 using DAL;
 using Helpers;
 
@@ -41,16 +41,16 @@ public class ApiBackgroundService: BackgroundService
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var apiService = new ApiService(context);
+        var uow = new UOW(context);
 
-        var latestTravelPrice = await apiService.GetLatestTravelPrice();
+        var latestTravelPrice = await uow.ApiService.GetLatestTravelPrice();
         if (latestTravelPrice?.ValidUntil > DateTime.UtcNow)
         {
             return latestTravelPrice.ValidUntil.GetTimeDifferenceFromNowInSecondsWithSpare();
         }
         
         _logger.LogInformation("Fetching travel prices from external API");
-        var travelPrice = await apiService.FetchTravelPriceFromApi();
+        var travelPrice = await uow.ApiService.FetchTravelPriceFromApi();
         if (travelPrice == null || travelPrice.Id == latestTravelPrice?.Id)
         {
             var message = latestTravelPrice?.Id != null ? 
@@ -61,7 +61,8 @@ public class ApiBackgroundService: BackgroundService
 
         try
         {
-            await apiService.ParseAndSaveTravelPrice(travelPrice);
+            await uow.ApiService.ParseAndSaveTravelPrice(travelPrice);
+            await uow.SaveChangesAsync();
         }
         catch (Exception e)
         {

@@ -51,7 +51,6 @@ public class ApiService
         await _context.Trips.AddRangeAsync(validTrips);
             
         await DeleteOldTravelPrices(_context);
-        await _context.SaveChangesAsync();
     }
 
 
