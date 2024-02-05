@@ -20,7 +20,11 @@ public static class DateTimeHelpers
     
     public static string GetFormattedTimeDifference(this TimeSpan timespan)
     {
-        return $"{Math.Round(timespan.TotalDays)}d {timespan.Hours}h {timespan.Minutes}m";
+        var result = $"{Math.Round(timespan.TotalDays)}d {timespan.Hours}h {timespan.Minutes}m";
+        
+        result = result.Replace("0d ", "");
+        result = result.Replace("0h ", "");
+        return result.Replace(" 0m", "");
     }
     
 }
