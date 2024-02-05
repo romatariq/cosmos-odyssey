@@ -40,31 +40,27 @@ public class RouteService
             
         var items = await query
             .Paging(pageNr, pageSize)
-            .Select(t => new
-            {
-                flights = t.TripFlights!.Select(f => f.Flight!).OrderBy(f => f.Departure).ToList(),
-                from = t.From,
-                to = t,
-                id = t.Id
-            })
             .Select(t => new Trip()
             {
-                Id = t.id,
-                Departure = t.flights.First().Departure,
-                Arrival = t.flights.Last().Arrival,
-                Price = t.flights.Sum(f => f.Price),
-                Distance = t.flights.Sum(f => f.Distance),
-                Flights = t.flights.Select(f => new Flight()
-                {
-                    Id = f.Id,
-                    From = f.From,
-                    To = f.To,
-                    Departure = f.Departure,
-                    Arrival = f.Arrival,
-                    Distance = f.Distance,
-                    Price = f.Price,
-                    Company = f.Company
-                }).ToList(),
+                Id = t.Id,
+                Departure = t.Departure,
+                Arrival = t.Arrival,
+                Price = t.Price,
+                Distance = t.Distance,
+                Flights = t.TripFlights!
+                    .Select(f => f.Flight!)
+                    .OrderBy(f => f.Departure)
+                    .Select(f => new Flight
+                    {
+                        Id = f.Id,
+                        From = f.From,
+                        To = f.To,
+                        Departure = f.Departure,
+                        Arrival = f.Arrival,
+                        Distance = f.Distance,
+                        Price = f.Price,
+                        Company = f.Company
+                    }).ToList(),
             }).ToListAsync();
 
         return (items, pageCount);

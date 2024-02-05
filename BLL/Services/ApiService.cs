@@ -72,6 +72,10 @@ public class ApiService
                     {
                         From = trip.First().From,
                         To = trip.Last().To,
+                        Departure = trip.First().Departure,
+                        Arrival = trip.Last().Arrival,
+                        Price = trip.Sum(f => f.Price),
+                        Distance = trip.Sum(f => f.Distance),
                         TravelPriceId = travelPrice.Id,
                         TripFlights = trip.Select(f => new Domain.OptimisedSchema.TripFlight()
                         {
