@@ -3,6 +3,13 @@
 
 @{
     ViewData["Title"] = "Index";
+
+    var getRouteText = (int count) => count switch
+    {
+        1 => "Direct",
+        2 => "1 stop",
+        _ => $"{count - 1} stops"
+    };
 }
 
 <h1>Index</h1>
@@ -56,12 +63,13 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Trips) {
-    var companies = string.Join(", ", item.Companies);
+    var companies = string.Join(", ", item.Companies.Order());
     var travelTime = item.To - item.From;
     var travelTimeStr = $"{Math.Round(travelTime.TotalDays)}d {travelTime.Hours}h {travelTime.Minutes}m";
-    var route = item.Flights.Count > 1 ? $"{item.Flights.Count - 1} stops" : "Direct";
-    var from = item.From.ToString("yyyy/MM/dd HH:mm");
-    var to = item.To.ToString("yyyy/MM/dd HH:mm");
+    var route = getRouteText(item.Flights.Count);
+    const string dateFormat = "dd.MM. HH:mm";
+    var from = item.From.ToString(dateFormat);
+    var to = item.To.ToString(dateFormat);
     
         <tr>
             <td>
