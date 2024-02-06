@@ -12,8 +12,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString)
-        .EnableSensitiveDataLogging());
+    options.UseNpgsql(connectionString));
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
