@@ -20,6 +20,12 @@ public static partial class DateTimeHelpers
         return dateTime.ToString(format);
     }
     
+    public static string GetFormattedDateTimeHours(this DateTime dateTime)
+    {
+        const string format = "HH:mm";
+        return dateTime.ToString(format);
+    }
+    
     public static string GetFormattedTimeDifference(this TimeSpan timespan)
     {
         var result = $"{timespan.Days}d {timespan.Hours}h {timespan.Minutes}m";

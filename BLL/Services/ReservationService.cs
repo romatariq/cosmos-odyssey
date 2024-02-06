@@ -53,6 +53,7 @@ public class ReservationService
                 Departure = t.Departure,
                 Arrival = t.Arrival,
                 Price = t.Price,
+                ReservableTill = t.TravelPrice!.ValidUntil,
                 Distance = t.Distance,
                 Flights = t.TripFlights!
                     .Select(tf => tf.Flight!)

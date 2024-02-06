@@ -4,6 +4,8 @@ public class Trip
 {
     public Guid Id { get; set; }
 
+    public DateTime ReservableTill { get; set; }
+
     public decimal Price { get; set; }
 
     public long Distance { get; set; }

@@ -11,6 +11,19 @@
 <h4>@Model.Trip.Flights.First().From - @Model.Trip.Flights.Last().To</h4>
 <hr/>
 
+@if (Model.Trip.ReservableTill < DateTime.UtcNow)
+{
+    <div class="alert alert-danger" role="alert">
+        Trip is no longer reservable. Go back to <a asp-page="/Providers/Index" class="alert-link">all trips</a>.
+    </div>
+}
+
+@if (Model.Trip.ReservableTill > DateTime.UtcNow)
+{
+    <div class="alert alert-info" role="alert">
+        Trip is reservable till @Model.Trip.ReservableTill.GetFormattedDateTimeHours() UTC.
+    </div>
+
 <form method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="d-flex mb-1">
@@ -30,6 +43,7 @@
         <input type="submit" value="Reserve" class="btn btn-primary"/>
     </div>
 </form>
+}
 
 <table class="table">
     <thead>
