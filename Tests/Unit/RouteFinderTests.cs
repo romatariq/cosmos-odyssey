@@ -102,6 +102,16 @@ public class RouteFinderTests
         
         Assert.That(validRoutes.Any(r => r.First().Arrival.AddMonths(10) < r.Last().Departure), Is.True);
     }
+    
+    [Test]
+    public void TestTripDirectionMatters()
+    {
+        var jupiterToMars = Helper.Calculate(EPlanet.Jupiter, EPlanet.Mars, _routes);
+        var marsToJupiter = Helper.Calculate(EPlanet.Mars, EPlanet.Jupiter, _routes);
+        
+        Assert.That(jupiterToMars, Has.Count.EqualTo(1));
+        Assert.That(marsToJupiter, Is.Empty);
+    }
 
     
 }
