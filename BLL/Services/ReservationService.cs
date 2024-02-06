@@ -87,11 +87,11 @@ public class ReservationService
             .FirstOrDefaultAsync();
     }
     
-    public async Task<bool> TripStillReservable(Domain.Reservation reservation)
+    public async Task<bool> TripStillReservable(Guid tripId)
     {
         return await _context.Trips
             .Include(t => t.TravelPrice)
-            .Where(t => t.Id == reservation.TripId && t.TravelPrice!.ValidUntil > DateTime.UtcNow)
+            .Where(t => t.Id == tripId && t.TravelPrice!.ValidUntil > DateTime.UtcNow)
             .AnyAsync();
     }
 }

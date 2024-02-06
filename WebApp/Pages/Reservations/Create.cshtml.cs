@@ -58,7 +58,7 @@ namespace WebApp.Pages_Reservations
                 return Page();
             }
             
-            if (!await _uow.ReservationService.TripStillReservable(Reservation))
+            if (!await _uow.ReservationService.TripStillReservable(Reservation.TripId))
             {
                 return RedirectToPage("/Providers/Index", new {error = "Sorry! The trip was no longer reservable. Please choose another one." });
             }
