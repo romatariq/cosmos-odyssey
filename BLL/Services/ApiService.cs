@@ -159,7 +159,7 @@ public class ApiService
     {
         return context.TravelPrices
             .OrderByDescending(tp => tp.ValidUntil)
-            .Skip(15)
+            .Skip(14)
             .ExecuteDeleteAsync();
     }
     
