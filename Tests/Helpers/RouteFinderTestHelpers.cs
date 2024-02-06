@@ -35,7 +35,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Neptune),
                 To = GetPlanet(EPlanet.Mercury),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Neptune, EPlanet.Mercury, DateTime.UtcNow)
@@ -45,7 +44,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Neptune),
                 To = GetPlanet(EPlanet.Uranus),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Neptune, EPlanet.Uranus, DateTime.UtcNow)
@@ -55,7 +53,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Uranus),
                 To = GetPlanet(EPlanet.Saturn),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Uranus, EPlanet.Saturn, DateTime.UtcNow.AddHours(1))
@@ -65,7 +62,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Saturn),
                 To = GetPlanet(EPlanet.Earth),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Saturn, EPlanet.Earth, DateTime.UtcNow.AddHours(2))
@@ -75,7 +71,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Earth),
                 To = GetPlanet(EPlanet.Jupiter),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Earth, EPlanet.Jupiter, DateTime.UtcNow.AddHours(3))
@@ -85,7 +80,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Jupiter),
                 To = GetPlanet(EPlanet.Mars),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Jupiter, EPlanet.Mars, DateTime.UtcNow.AddHours(4))
@@ -95,7 +89,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Mars),
                 To = GetPlanet(EPlanet.Venus),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Mars, EPlanet.Venus, DateTime.UtcNow.AddHours(5))
@@ -105,7 +98,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Jupiter),
                 To = GetPlanet(EPlanet.Venus),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Jupiter, EPlanet.Venus, DateTime.UtcNow.AddHours(5))
@@ -115,7 +107,6 @@ public static class RouteFinderTestHelpers
             {
                 From = GetPlanet(EPlanet.Venus),
                 To = GetPlanet(EPlanet.Mercury),
-                Distance = 100,
                 Flights =
                 [
                     GenerateFlight(EPlanet.Venus, EPlanet.Mercury, DateTime.UtcNow.AddHours(6))
