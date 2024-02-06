@@ -23,7 +23,7 @@ public static class RouteFinderTestHelpers
             From = GetPlanet(from),
             To = GetPlanet(to),
             Departure = time,
-            Arrival = time.AddMinutes(1)
+            Arrival = time
         };
     }
     
@@ -112,6 +112,18 @@ public static class RouteFinderTestHelpers
                     GenerateFlight(EPlanet.Venus, EPlanet.Mercury, DateTime.UtcNow.AddHours(6))
                 ]
             },
+            new Route
+            {
+                From = GetPlanet(EPlanet.Saturn),
+                To = GetPlanet(EPlanet.Neptune),
+                Flights =
+                [
+                    GenerateFlight(EPlanet.Saturn, EPlanet.Neptune, DateTime.UtcNow),
+                    GenerateFlight(EPlanet.Saturn, EPlanet.Neptune, DateTime.UtcNow.AddHours(1).AddMinutes(29)),
+                    GenerateFlight(EPlanet.Saturn, EPlanet.Neptune, DateTime.UtcNow.AddHours(1).AddMinutes(30)),
+                    GenerateFlight(EPlanet.Saturn, EPlanet.Neptune, DateTime.UtcNow.AddYears(1))
+                ]
+            }
         ];
     }
 }

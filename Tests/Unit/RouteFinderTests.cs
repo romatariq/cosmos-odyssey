@@ -61,6 +61,47 @@ public class RouteFinderTests
         Assert.That(middleRoute, Has.Count.EqualTo(6));
         Assert.That(middleRoute[4].To, Is.EqualTo(EPlanet.Venus.GetPlanet()));
     }
+    
+    [Test]
+    public void TestFindAllPathsFromUranusToNeptune()
+    {
+        var validRoutes = Helper.Calculate(EPlanet.Uranus, EPlanet.Neptune, _routes);
+        
+        Assert.That(validRoutes, Has.Count.EqualTo(2));
+    }
+    
+    [Test]
+    public void TestFindAllPathsFromUranusToNeptuneAreSingleStop()
+    {
+        var validRoutes = Helper.Calculate(EPlanet.Uranus, EPlanet.Neptune, _routes);
+        
+        Assert.That(validRoutes.All(r => r.Count == 2), Is.True);
+    }
+    
+    [Test]
+    public void TestTripNotValidIfNextFlightDeparturesBeforePreviousArrives()
+    {
+        var validRoutes = Helper.Calculate(EPlanet.Uranus, EPlanet.Neptune, _routes);
+        
+        Assert.That(validRoutes.All(r => r.First().Arrival < r.Last().Departure), Is.True);
+    }
+    
+    [Test]
+    public void TestTripNotValidIfLayoverShorterThan30Minutes()
+    {
+        var validRoutes = Helper.Calculate(EPlanet.Uranus, EPlanet.Neptune, _routes);
+        
+        Assert.That(validRoutes.All(r => r.First().Arrival.AddMinutes(30) < r.Last().Departure), Is.True);
+    }
+    
+        
+    [Test]
+    public void TestTripValidEvenIfLayoverIsVerLong()
+    {
+        var validRoutes = Helper.Calculate(EPlanet.Uranus, EPlanet.Neptune, _routes);
+        
+        Assert.That(validRoutes.Any(r => r.First().Arrival.AddMonths(10) < r.Last().Departure), Is.True);
+    }
 
     
 }
