@@ -2,6 +2,7 @@ using DAL;
 using Domain;
 using DTO.Public;
 using Microsoft.EntityFrameworkCore;
+using Reservation = DTO.Public.Reservation;
 
 namespace BLL.Services;
 
@@ -19,7 +20,20 @@ public class ReservationService
         await _context.Reservations.AddAsync(reservation);
     }
     
-    public async Task<List<DTO.Public.Reservation>> GetReservations(Guid userId)
+    public async Task<ReservationDetails?> GetReservation(Guid id)
+    {
+        return await _context.Reservations
+            .Where(r => r.Id == id)
+            .Select(r => new ReservationDetails()
+            {
+                LastName = r.LastName,
+                FirstName = r.FirstName,
+                Id = r.Id,
+                TripId = r.TripId
+            }).SingleOrDefaultAsync();
+    }
+    
+    public async Task<List<Reservation>> GetReservations(Guid userId)
     {
         return await _context.Reservations
             .Include(r => r.Trip!)
@@ -27,7 +41,7 @@ public class ReservationService
             .ThenInclude(tf => tf.Flight!)
             .Where(r => r.UserId == userId)
             .OrderByDescending(r => r.Trip!.Departure)
-            .Select(r => new DTO.Public.Reservation()
+            .Select(r => new Reservation()
             {
                 Id = r.Id,
                 Departure = r.Trip!.Departure,

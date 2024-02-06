@@ -1,42 +1,61 @@
 @page
+@using Helpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model WebApp.Pages_Reservations.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Reservation for @Model.Reservation.FirstName @Model.Reservation.LastName</h1>
 
-<div>
-    <h4>Reservation</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.FirstName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.FirstName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.LastName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.Trip)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.Trip!.From)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.User!.Id)
-        </dd>
-    </dl>
-</div>
+<h4>@Model.Trip.Flights.First().From - @Model.Trip.Flights.Last().To</h4>
+<hr/>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Departure</th>
+        <th>Arrival</th>
+        <th>Company</th>
+        <th>Flight time + layover</th>
+        <th>Distance</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(var i = 0; i < Model.Trip.Flights.Count; i++)
+    {
+        var flight = Model.Trip.Flights[i];
+        var flightsCount = Model.Trip.Flights.Count;
+        var shouldDisplayLayover = flightsCount > 1 && i != flightsCount - 1;
+        var layover = shouldDisplayLayover ? (Model.Trip.Flights[i + 1].Departure - Model.Trip.Flights[i].Arrival).GetFormattedTimeDifference() : "";
+        <tr>
+            <td>@flight.From</td>
+            <td>@flight.To</td>
+            <td>@flight.Departure.GetFormattedDateTime()</td>
+            <td>@flight.Arrival.GetFormattedDateTime()</td>
+            <td>@flight.Company</td>
+            <td>@(flight.Arrival.Subtract(flight.Departure).GetFormattedTimeDifference())@(shouldDisplayLayover ? $" + {layover}" : "")</td>
+            <td>@flight.Distance</td>
+            <td>@flight.Price</td>
+        </tr>
+        
+        if (i == flightsCount - 1 && i != 0)
+        {
+            <tr>
+                <td class="border-bottom-0" colspan="5"></td>
+                <td class="border-bottom-0">@((Model.Trip.Arrival - Model.Trip.Departure).GetFormattedTimeDifference())</td>
+                <td class="border-bottom-0">@Model.Trip.Distance</td>
+                <td class="border-bottom-0">@Model.Trip.Price</td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
 <div>
     <a asp-page="./Index">My Reservations</a>
 </div>
