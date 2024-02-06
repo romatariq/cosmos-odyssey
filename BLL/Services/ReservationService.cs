@@ -26,6 +26,7 @@ public class ReservationService
             .ThenInclude(t => t.TripFlights!)
             .ThenInclude(tf => tf.Flight!)
             .Where(r => r.UserId == userId)
+            .OrderByDescending(r => r.Trip!.Departure)
             .Select(r => new DTO.Public.Reservation()
             {
                 Id = r.Id,
