@@ -15,9 +15,9 @@
 
 <h1>Providers</h1>
 
-@if (Model.Trips.Count == 0 && Model.From != Model.To)
+@if (Model.Trips.Count == 0 && Model.From != Model.To && Model.Filter == null)
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-warning" role="alert">
         Try again in a moment. Fetching newest data.
     </div>
 }
