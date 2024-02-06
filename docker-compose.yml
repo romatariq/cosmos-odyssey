@@ -1,6 +1,18 @@
 version: "3.9"
 
 services:
+  cosmos-odyssey-app:
+    container_name: "cosmos-odyssey-app"
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      # external:internal
+      - "8000:8080"
+    environment:
+      - ConnectionStrings:DefaultConnection=Host=cosmos-odyssey-db:5432;Database=cosmos-odyssey-db;Username=postgres;Password=postgres
+    depends_on:
+      - cosmos-odyssey-db
+
   cosmos-odyssey-db:
     container_name: "cosmos-odyssey-db"
     image: "postgres:15.2-bullseye"
