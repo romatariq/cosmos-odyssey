@@ -56,8 +56,9 @@ namespace WebApp.Pages_Providers
         public string? Filter { get; set; }
         public int PageNr { get; set; } = 1;
         public int PageCount { get; set; } = 1;
+        public string? Error { get; set; }
 
-        public async Task OnGetAsync(EPlanet? from, EPlanet? to, ESortBy? sort, string? filter, int pageNr = 1)
+        public async Task OnGetAsync(EPlanet? from, EPlanet? to, ESortBy? sort, string? filter, string? error, int pageNr = 1)
         {
             if (from != null && to != null)
             {
@@ -67,6 +68,7 @@ namespace WebApp.Pages_Providers
             Sort = sort ?? Sort;
             Filter = filter;
             PageNr = Math.Max(1, pageNr);
+            Error = error;
             
             var (trips, pageCount) = await _uow.RouteService
                 .GetAllTrips(From, To, Sort, filter?.Trim(), PageNr, 15);

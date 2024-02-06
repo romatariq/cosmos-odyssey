@@ -18,8 +18,11 @@ namespace WebApp.Pages_Reservations
 
         public IList<Reservation> Reservations { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public string? Message { get; set; }
+
+        public async Task OnGetAsync(string? message)
         {
+            Message = message;
             Reservations = await _uow.ReservationService.GetReservations(User.GetUserId());
         }
     }
