@@ -9,3 +9,9 @@ dotnet ef database update --project DAL --startup-project WebApp --context AppDb
 cd WebApp
 dotnet aspnet-codegenerator razorpage -m Domain.Reservation -dc AppDbContext -udl -outDir Pages/Reservations –referenceScriptLibraries
 ~~~
+
+# Docker
+~~~bash
+# --build updates the image
+docker-compose up --build
+~~~
