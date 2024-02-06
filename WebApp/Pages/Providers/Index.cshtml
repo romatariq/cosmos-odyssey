@@ -13,7 +13,14 @@
     };
 }
 
-<h1>Index</h1>
+<h1>Providers</h1>
+
+@if (Model.Trips.Count == 0 && Model.From != Model.To)
+{
+    <div class="alert alert-danger" role="alert">
+        Try again in a moment. Fetching newest data.
+    </div>
+}
 
 <form method="get">
     <div class="d-flex mb-1">
