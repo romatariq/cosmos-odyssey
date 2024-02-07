@@ -14,6 +14,8 @@ public class Reservation
     [MinLength(1), MaxLength(200)]
     public string LastName { get; set; } = default!;
 
+    public DateTime CreatedAt { get; set; }
+
     public Guid TripId { get; set; }
     public Trip? Trip { get; set; }
 

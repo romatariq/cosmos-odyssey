@@ -1,6 +1,6 @@
 # create migration
 ~~~bash
-dotnet ef migrations add ReservationNames --project DAL --startup-project WebApp --context AppDbContext
+dotnet ef migrations add ReservationCreatedAt --project DAL --startup-project WebApp --context AppDbContext
 dotnet ef database update --project DAL --startup-project WebApp --context AppDbContext
 ~~~
 

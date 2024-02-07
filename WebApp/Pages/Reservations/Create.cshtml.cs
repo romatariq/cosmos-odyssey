@@ -46,6 +46,7 @@ namespace WebApp.Pages_Reservations
         {
             Reservation.TripId = TripId;
             Reservation.UserId = User.GetUserId();
+            Reservation.CreatedAt = DateTime.UtcNow;
             if (!ModelState.IsValid)
             {
                 var trip = await _uow.ReservationService.GetTrip(TripId);

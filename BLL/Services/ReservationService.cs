@@ -41,7 +41,7 @@ public class ReservationService
             .ThenInclude(t => t.TripFlights!)
             .ThenInclude(tf => tf.Flight!)
             .Where(r => r.UserId == userId)
-            .OrderByDescending(r => r.Trip!.Departure)
+            .OrderByDescending(r => r.CreatedAt)
             .Select(r => new Reservation()
             {
                 Id = r.Id,
