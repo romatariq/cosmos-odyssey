@@ -10,6 +10,7 @@ git clone git@github.com:romatariq/cosmos-odyssey.git
 cd cosmos-odyssey
 docker-compose up
 ~~~
+5. Run `docker-compose down` in the root directory of the project if you want to delete the created containers and images.
 
 ## About the app
 
