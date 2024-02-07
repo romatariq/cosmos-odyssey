@@ -48,10 +48,10 @@ namespace WebApp.Pages_Providers
         public EPlanet From { get; set; } = EPlanet.Earth;
         
         [BindProperty]
-        public EPlanet To { get; set; } = EPlanet.Mars;
+        public EPlanet To { get; set; } = EPlanet.Mercury;
         
         [BindProperty]
-        public ESortBy Sort { get; set; } = ESortBy.DepartureAsc;
+        public ESortBy Sort { get; set; } = ESortBy.TravelTimeAsc;
         
         public string? Filter { get; set; }
         public int PageNr { get; set; } = 1;
