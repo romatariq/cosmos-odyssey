@@ -16,8 +16,10 @@ namespace WebApp.Pages_Reservations
 
         public ReservationDetails Reservation { get; set; } = default!;
         public Trip Trip { get; set; } = default!;
+        public string? Message { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(Guid id)
+
+        public async Task<IActionResult> OnGetAsync(Guid id, string? message)
         {
             var reservation = await _uow.ReservationService.GetReservation(id);
             var trip = reservation == null ? null : await _uow.ReservationService.GetTrip(reservation.TripId);
@@ -28,6 +30,7 @@ namespace WebApp.Pages_Reservations
             
             Reservation = reservation;
             Trip = trip;
+            Message = message;
 
             return Page();
         }

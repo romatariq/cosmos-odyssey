@@ -15,9 +15,10 @@ public class ReservationService
         _context = context;
     }
     
-    public async Task CreateReservation(Domain.Reservation reservation)
+    public async Task<Guid> CreateReservation(Domain.Reservation reservation)
     {
-        await _context.Reservations.AddAsync(reservation);
+        var createdReservation = await _context.Reservations.AddAsync(reservation);
+        return createdReservation.Entity.Id;
     }
     
     public async Task<ReservationDetails?> GetReservation(Guid id)

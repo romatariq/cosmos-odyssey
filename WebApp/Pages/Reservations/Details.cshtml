@@ -12,6 +12,13 @@
 <h4>@Model.Trip.Flights.First().From - @Model.Trip.Flights.Last().To</h4>
 <hr/>
 
+@if (Model.Message != null)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
 <table class="table">
     <thead>
     <tr>

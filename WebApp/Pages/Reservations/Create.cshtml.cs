@@ -63,10 +63,10 @@ namespace WebApp.Pages_Reservations
                 return RedirectToPage("/Providers/Index", new {error = "Sorry! The trip was no longer reservable. Please choose another one." });
             }
 
-            await _uow.ReservationService.CreateReservation(Reservation);
+            var reservationId = await _uow.ReservationService.CreateReservation(Reservation);
             await _uow.SaveChangesAsync();
 
-            return RedirectToPage("./Index", new {message = "Reservation created successfully!"});
+            return RedirectToPage("./Details", new {message = "Reservation created successfully!", id = reservationId});
         }
     }
 }
