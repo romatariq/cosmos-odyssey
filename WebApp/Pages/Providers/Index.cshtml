@@ -39,11 +39,11 @@
             <label asp-for="To" class="control-label"></label>
             <select asp-for="To" class="form-control" asp-items="Model.ToSelectList"></select>
         </div>
-        <div class="col-2 mx-2">
+        <div class="col-3 col-md-2 mx-2">
             <label asp-for="Sort" class="control-label"></label>
             <select asp-for="Sort" class="form-control" asp-items="Model.SortBySelectList"></select>
         </div>
-        <div class="col-2">
+        <div class="col-3 col-md-2">
             <label asp-for="Filter" class="control-label"></label>
             <input asp-for="Filter" class="form-control" placeholder="Company name"/>
         </div>
@@ -52,7 +52,7 @@
     <input type="submit" class="btn btn-primary" value="Filter"/>
 </form>
 <div class="d-flex my-1">
-    <div class="col-1">
+    <div class="col-3 col-md-1">
         @if (Model.PageNr > 1)
         {
             <a id="previous-page" 
@@ -62,7 +62,7 @@
                asp-route-filter="@Model.Filter" asp-page="./Index" asp-route-pageNr="@(Model.PageNr - 1)">Previous</a>
         }
     </div>        
-    <div class="col-1">
+    <div class="col-3 col-md-1">
         @if (Model.PageCount > Model.PageNr)
         {
             <a id="next-page" 
@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<table class="table">
+<table class="table d-block d-md-table overflow-scroll">
     <thead>
         <tr>
             <th>
