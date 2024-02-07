@@ -90,9 +90,6 @@
                 Stops
             </th>
             <th>
-                Route
-            </th>
-            <th>
                 Travel time
             </th>
             <th>
@@ -108,7 +105,6 @@
 @foreach (var item in Model.Trips) {
     var companies = string.Join(", ", item.Flights.Select(f => f.Company).Distinct().Order());
     var stops = getRouteText(item.Flights.Count);
-    var route = string.Join(" - ", item.Flights.Select(f => f.From).Append(item.Flights.Last().To));
     
         <tr>
             <td>
@@ -122,9 +118,6 @@
             </td>
             <td>
                 @stops
-            </td>
-            <td>
-                @route
             </td>
             <td>
                 @(item.Arrival.Subtract(item.Departure).GetFormattedTimeDifference())
