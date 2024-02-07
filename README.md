@@ -10,3 +10,14 @@ git clone git@github.com:romatariq/cosmos-odyssey.git
 cd cosmos-odyssey
 docker-compose up
 ~~~
+
+## About the app
+
+Cosmos Odyssey is a web application that allows users to reserve flights.
+The app is built using the [Cosmos Odyssey API](https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices).
+
+### Views
+![Providers](./Screenshots/1.png)
+![Create a reservation](./Screenshots/2.png)
+![Created reservation details](./Screenshots/3.png)
+![All user reservations](./Screenshots/4.png)
