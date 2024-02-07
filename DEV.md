@@ -14,4 +14,9 @@ dotnet aspnet-codegenerator razorpage -m Domain.Reservation -dc AppDbContext -ud
 ~~~bash
 # --build updates the image
 docker-compose up --build
+
+# Docker Hub
+docker build -t cosmos-odyssey .
+docker tag cosmos-odyssey romatariq/cosmos-odyssey:latest
+docker push romatariq/cosmos-odyssey:latest
 ~~~
